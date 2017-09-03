@@ -29,7 +29,9 @@ public class DeckViewer extends AppCompatActivity {
         lvDeckViewer = (ListView) findViewById(R.id.cardListView);
         dc = new FlashCardDatabaseController(this);
         getDeckInfo();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     // Gets the flashcard deck ID number from MainActivity.
@@ -67,6 +69,13 @@ public class DeckViewer extends AppCompatActivity {
 
     }
 
+    private void goToCardViewer(){
+        Intent goToCardViewer = new Intent (this, CardViewer.class);
+        goToCardViewer.putExtra("deckId",idNumber);
+        startActivity(goToCardViewer);
+        finish();
+    }
+
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
@@ -83,6 +92,8 @@ public class DeckViewer extends AppCompatActivity {
             case R.id.action_add_card:
                 goToAddCardActivity();
                 return true;
+            case R.id.action_help:
+                goToCardViewer();
             default:
                 return super.onOptionsItemSelected(item);
         }

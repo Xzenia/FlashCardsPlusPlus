@@ -30,6 +30,7 @@ public class AddCard extends AppCompatActivity {
         //get ID number to identify what deck the card is part of.
         Bundle getInfo = getIntent().getExtras();
         int getDeckId = getInfo.getInt("deckId");
+        toastMessage("Deck ID: "+getDeckId);
 
         //generates an individual id number for the card. Might remove this soon.
         int id = 111111 + (int) (Math.random() * 999999);
@@ -43,7 +44,7 @@ public class AddCard extends AppCompatActivity {
 
         boolean confirm = dc.addData(id,getDeckId,firstPart,secondPart);
 
-        if (confirm == true){
+        if (confirm){
             toastMessage("Card Successfully Added!");
             startActivity(goToDeckViewer);
             finish();

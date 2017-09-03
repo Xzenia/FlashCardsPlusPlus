@@ -9,16 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.treskie.conrad.flashcardsplus.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.treskie.conrad.flashcardsplus.DeckViewer"> </activity>
-        <activity android:name="com.treskie.conrad.flashcardsplus.AddCard"> </activity>
-        <activity android:name="com.treskie.conrad.flashcardsplus.AddDeck"> </activity>
+        <activity android:name=".DeckViewer"/>
+        <activity android:name=".AddCard"/>
+        <activity android:name=".AddDeck"/>
+        <activity android:name=".CardViewer"/>
     </application>
 
 </manifest>

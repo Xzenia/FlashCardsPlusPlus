@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void viewItem(int id){
-        Intent goToEditActivity = new Intent (this, DeckViewer.class);
+        Intent goToEditActivity = new Intent (this, CardViewer.class);
         goToEditActivity.putExtra("id",id);
         startActivity(goToEditActivity);
     }
