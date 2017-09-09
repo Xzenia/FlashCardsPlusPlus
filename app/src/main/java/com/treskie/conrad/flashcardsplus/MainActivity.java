@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.activity_add_deck,menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.action_add_deck:
@@ -55,9 +56,14 @@ public class MainActivity extends AppCompatActivity {
     private void populateListView(){
         Cursor data = mDB.getData();
         ArrayList<String> listData = new ArrayList<>();
+        //goes through all the entries in the deck database and adds them to the ArrayList
+
         while(data.moveToNext()){
             listData.add(data.getString(1));
         }
+
+        //  Note: simple_list_item_1 is a list layout that only displays one line of text per entry
+        //  TODO: Change the layout to accommodate more information
         final ListAdapter adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,listData);
         lvListView.setAdapter(adapter);
         lvListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

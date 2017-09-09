@@ -31,7 +31,10 @@ public class DeckViewer extends AppCompatActivity {
         getDeckInfo();
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+
         }
+
     }
 
     // Gets the flashcard deck ID number from MainActivity.
@@ -66,7 +69,6 @@ public class DeckViewer extends AppCompatActivity {
         addCardInfo.putExtra("deckId",idNumber);
         startActivity(addCardInfo);
         finish();
-
     }
 
     private void goToCardViewer(){
@@ -98,5 +100,4 @@ public class DeckViewer extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }
