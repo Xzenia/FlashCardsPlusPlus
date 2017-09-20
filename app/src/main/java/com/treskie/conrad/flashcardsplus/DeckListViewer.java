@@ -16,11 +16,11 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class DeckViewer extends AppCompatActivity {
+public class DeckListViewer extends AppCompatActivity {
     ListView lvDeckViewer;
     FlashCardDatabaseController dc;
     int idNumber;
-    private static final String TAG = "DeckViewer";
+    private static final String TAG = "DeckListViewer";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

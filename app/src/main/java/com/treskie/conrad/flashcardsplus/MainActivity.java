@@ -89,9 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void viewItem(int id){
         Intent goToEditActivity = new Intent (this, CardViewer.class);
-        goToEditActivity.putExtra("id",id);
+        goToEditActivity.putExtra("deckId",id);
         startActivity(goToEditActivity);
     }
+
+    //Makes popup messages. Good for debugging mostly.
 
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();

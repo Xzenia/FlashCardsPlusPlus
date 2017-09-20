@@ -39,6 +39,7 @@ public class AddCard extends AppCompatActivity {
             Grabs data from the two text fields
             Look into /res/layout/activity_add_card.xml for said text fields
         */
+
         String firstPart = mFirstPart.getText().toString();
         String secondPart = mSecondPart.getText().toString();
 

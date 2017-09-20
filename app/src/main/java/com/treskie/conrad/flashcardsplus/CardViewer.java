@@ -71,7 +71,7 @@ public class CardViewer extends AppCompatActivity {
 
     private int getIdFromMainActivity(){
         Bundle getId = getIntent().getExtras();
-        int id = getId.getInt("id");
+        int id = getId.getInt("deckId");
         return id;
     }
 
@@ -82,6 +82,7 @@ public class CardViewer extends AppCompatActivity {
     }
 
     //TODO: Find a better way that doesn't involve ArrayLists
+
     private void getCards(int id){
         Cursor data = dc.getData(id);
         firstPartArray = new ArrayList<>();
@@ -102,14 +103,16 @@ public class CardViewer extends AppCompatActivity {
 
     }
 
+    //TODO: Add swiping feature to remove placeholder buttons.
+
     public void goToNextCard(View v){
         Intent goToNextCard = new Intent(this, CardViewer.class);
 
-        if (indexNumber >= firstPartArray.size()-1){
+        if (indexNumber >= firstPartArray.size() - 1){
             toastMessage("This is the end...");
         } else {
             goToNextCard.putExtra("index", indexNumber + 1);
-            goToNextCard.putExtra("id",idNumber);
+            goToNextCard.putExtra("deckId",idNumber);
             startActivity(goToNextCard);
             finish();
         }
@@ -121,7 +124,7 @@ public class CardViewer extends AppCompatActivity {
             toastMessage("You are in the first card!");
         } else {
             goToNextCard.putExtra("index", indexNumber - 1);
-            goToNextCard.putExtra("id",idNumber);
+            goToNextCard.putExtra("deckId",idNumber);
             startActivity(goToNextCard);
             finish();
         }
@@ -131,7 +134,7 @@ public class CardViewer extends AppCompatActivity {
     //Top bar menu stuff.
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_add_card,menu);
+        inflater.inflate(R.menu.activity_card_viewer,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -140,6 +143,11 @@ public class CardViewer extends AppCompatActivity {
             case R.id.action_add_card:
                 goToAddCardActivity();
                 return true;
+
+            case R.id.action_edit_card:
+                goToEditCardActivity();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -152,7 +160,16 @@ public class CardViewer extends AppCompatActivity {
         finish();
     }
 
-    //Makes popup messages. Good for debugging mostly.
+    private void goToEditCardActivity(){
+        Intent goToEditCard = new Intent (this, EditCard.class);
+        goToEditCard.putExtra("firstPart",etFirstPart.getText().toString());
+        goToEditCard.putExtra("secondPart", etSecondPart.getText().toString());
+        goToEditCard.putExtra("deckId",idNumber);
+        startActivity(goToEditCard);
+        finish();
+    }
+
+
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }

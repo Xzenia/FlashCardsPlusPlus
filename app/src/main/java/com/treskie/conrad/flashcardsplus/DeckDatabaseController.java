@@ -7,9 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-/**
- * Created by mitrix on 7/4/17.
- */
 
 public class DeckDatabaseController extends SQLiteOpenHelper {
     private static final String TAG = "ClassListDatabase";
@@ -44,11 +41,7 @@ public class DeckDatabaseController extends SQLiteOpenHelper {
         contentValues.put(COL1,name);
         Log.d(TAG, "addData: Adding "+ name + " to "+ TABLENAME);
         long result = db.insert(TABLENAME,null,contentValues);
-        if (result == -1){
-            return false;
-        } else {
-            return true;
-        }
+        return result != -1;
     }
 
     public Cursor getData(){

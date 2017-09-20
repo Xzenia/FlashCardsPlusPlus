@@ -2,11 +2,10 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Edit Icon -->
     <item
         android:id="@+id/action_add_card"
         android:icon="@drawable/ic_action_add"
-        android:title="Edit"
+        android:title="Add"
         app:showAsAction="always" />
 
     <item

@@ -11,7 +11,6 @@ import android.widget.Toast;
 public class AddDeck extends AppCompatActivity {
     EditText mDeckName;
     DeckDatabaseController db;
-    Intent goToMainActivity;
     private static final String TAG = "AddDeck";
 
     @Override
@@ -21,21 +20,27 @@ public class AddDeck extends AppCompatActivity {
         mDeckName = (EditText) findViewById(R.id.deckNameField);
         db = new DeckDatabaseController(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        goToMainActivity = new Intent(this, MainActivity.class);
+
     }
+
     public void addDeckMethod(View view){
+        Intent goToMainActivity = new Intent(this, MainActivity.class);
         String sProductName = mDeckName.getText().toString();
         int id = 111111 + (int) (Math.random() * 999999);
         boolean addData = db.addData(id,sProductName);
+
         if (addData == true){
             toastMessage("Deck Successfully Added!");
+            Log.i(TAG, "Deck successfully added!");
             startActivity(goToMainActivity);
             finish();
+
         } else {
             toastMessage("Oops! Something went wrong!");
-            Log.e(TAG, "Deck was not successfully added! Probably something wrong with the DeckDatabaseController!");
+            Log.e(TAG, "Deck was not successfully added!");
         }
     }
+
     private void toastMessage(String message){
         Toast.makeText(this,message, Toast.LENGTH_SHORT).show();
     }

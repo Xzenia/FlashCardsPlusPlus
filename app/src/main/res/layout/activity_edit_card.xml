@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.treskie.conrad.flashcardsplus.AddCard"
+    tools:context="com.treskie.conrad.flashcardsplus.EditCard"
     tools:layout_editor_absoluteY="81dp"
     tools:layout_editor_absoluteX="0dp">
+
 
     <TextView
         android:id="@+id/addFlashCard"
         android:layout_width="244dp"
         android:layout_height="66dp"
-        android:text="Add Flashcard"
+        android:text="Edit Flashcard"
         android:gravity="center"
         android:textSize="24dp"
         app:layout_constraintRight_toRightOf="parent"
@@ -26,7 +27,6 @@
         android:layout_height="wrap_content"
         android:ems="16"
         android:inputType="textPersonName"
-        android:hint="First Part"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/secondPart"
@@ -38,7 +38,6 @@
         android:layout_height="43dp"
         android:ems="10"
         android:inputType="textMultiLine"
-        android:hint="Second Part"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/confirmButton"
@@ -50,17 +49,11 @@
         android:layout_height="wrap_content"
         android:text="Add Flashcard"
         android:onClick="saveToDatabase"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/secondPart" />
+        app:layout_constraintTop_toBottomOf="@+id/secondPart"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-    <android.support.constraint.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/guideline"
-        app:layout_constraintGuide_begin="20dp"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteY="20dp"
-        tools:layout_editor_absoluteX="0dp" />
+
+
 </android.support.constraint.ConstraintLayout>

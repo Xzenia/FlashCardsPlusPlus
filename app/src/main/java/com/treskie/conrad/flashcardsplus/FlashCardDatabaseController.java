@@ -7,9 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-/**
- * Created by mitrix on 8/27/17.
- */
 
 public class FlashCardDatabaseController extends SQLiteOpenHelper{
     private static final String TAG = "FlashCardDatabase";
@@ -33,9 +30,8 @@ public class FlashCardDatabaseController extends SQLiteOpenHelper{
     }
 
     public void onUpgrade(SQLiteDatabase db, int newVersion, int oldVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+ TABLENAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLENAME);
         onCreate(db);
-
     }
 
     public boolean addData(int id,int identifier, String firstPart, String secondPart){
@@ -47,12 +43,19 @@ public class FlashCardDatabaseController extends SQLiteOpenHelper{
         contentValues.put(COL3,secondPart);
         Log.d(TAG, "ADDING VALUES TO CARD WITH IDENTIFIER: "+identifier);
         long result = db.insert(TABLENAME,null,contentValues);
-        if (result == -1){
-            return false;
-        } else {
-            return true;
-        }
+        return result != -1;
     }
+
+    //TODO: Replace firstPart with card index number
+    public boolean updateCard(String oldFirstPart, String oldSecondPart,String newFirstPart, String newSecondPart,int deckId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL2,newFirstPart);
+        contentValues.put(COL3,newSecondPart);
+        long result = db.update(TABLENAME,contentValues,COL2+" = ? AND "+COL3+" = ? AND "+COLIDENTIFIER+" = ?",new String[]{oldFirstPart,oldSecondPart,Integer.toString(deckId)});
+        return result != -1;
+    }
+
 
     public Cursor getData(int id){
         SQLiteDatabase db = this.getWritableDatabase();
