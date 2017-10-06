@@ -1,4 +1,4 @@
-package com.treskie.conrad.flashcardsplus;
+package com.treskie.conrad.flashcardsplus.Controller;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -53,6 +53,12 @@ public class FlashCardDatabaseController extends SQLiteOpenHelper{
         contentValues.put(COL2,newFirstPart);
         contentValues.put(COL3,newSecondPart);
         long result = db.update(TABLENAME,contentValues,COL2+" = ? AND "+COL3+" = ? AND "+COLIDENTIFIER+" = ?",new String[]{oldFirstPart,oldSecondPart,Integer.toString(deckId)});
+        return result != -1;
+    }
+
+    public boolean deleteCard(String firstPart, int deckId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        long result = db.delete(TABLENAME,firstPart+" = ? AND "+COLIDENTIFIER+" = ?",new String[]{firstPart, String.valueOf(deckId)});
         return result != -1;
     }
 

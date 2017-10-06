@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.treskie.conrad.flashcardsplus.AddDeck">
+    tools:context="com.treskie.conrad.flashcardsplus.Add.AddDeck">
 
     <TextView
         android:id="@+id/addCardTextView"

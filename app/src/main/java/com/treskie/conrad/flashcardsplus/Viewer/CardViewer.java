@@ -1,4 +1,4 @@
-package com.treskie.conrad.flashcardsplus;
+package com.treskie.conrad.flashcardsplus.Viewer;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,6 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.treskie.conrad.flashcardsplus.Add.AddCard;
+import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
+import com.treskie.conrad.flashcardsplus.Add.EditCard;
+import com.treskie.conrad.flashcardsplus.MainActivity;
+import com.treskie.conrad.flashcardsplus.R;
 
 import java.util.ArrayList;
 
@@ -143,11 +149,20 @@ public class CardViewer extends AppCompatActivity {
             case R.id.action_add_card:
                 goToAddCardActivity();
                 return true;
-
+            case R.id.action_delete_card:
+                if (firstPartArray.isEmpty()){
+                    toastMessage("There are no contents in the deck!");
+                } else {
+                    deleteCardActivity(etFirstPart.getText().toString(), idNumber);
+                    return true;
+                }
             case R.id.action_edit_card:
-                goToEditCardActivity();
-                return true;
-
+                if (firstPartArray.isEmpty()){
+                    toastMessage("There are no contents in the deck!");
+                } else {
+                    goToEditCardActivity();
+                    return true;
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -169,6 +184,17 @@ public class CardViewer extends AppCompatActivity {
         finish();
     }
 
+    private void deleteCardActivity(String firstPart, int deckId){
+        boolean result = dc.deleteCard(firstPart,deckId);
+        if (result){
+            toastMessage("Card successfully deleted!");
+            Log.i(TAG,"Card successfully deleted");
+        } else {
+            toastMessage("Card was not deleted successfully!");
+            Log.e(TAG,"Card was not deleted!");
+        }
+
+    }
 
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();

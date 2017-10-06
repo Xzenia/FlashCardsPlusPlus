@@ -16,10 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddCard" />
-        <activity android:name=".AddDeck" />
-        <activity android:name=".CardViewer" />
-        <activity android:name=".EditCard"></activity>
+        <activity android:name=".Add.AddCard" />
+        <activity android:name=".Add.AddDeck" />
+        <activity android:name=".Viewer.CardViewer" />
+        <activity android:name=".Add.EditCard"></activity>
     </application>
 
 </manifest>

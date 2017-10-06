@@ -1,4 +1,4 @@
-package com.treskie.conrad.flashcardsplus;
+package com.treskie.conrad.flashcardsplus.Viewer;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,6 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.treskie.conrad.flashcardsplus.Add.AddCard;
+import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
+import com.treskie.conrad.flashcardsplus.R;
 
 import java.util.ArrayList;
 

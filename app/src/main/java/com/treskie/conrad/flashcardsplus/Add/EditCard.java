@@ -1,4 +1,4 @@
-package com.treskie.conrad.flashcardsplus;
+package com.treskie.conrad.flashcardsplus.Add;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
+import com.treskie.conrad.flashcardsplus.R;
+import com.treskie.conrad.flashcardsplus.Viewer.CardViewer;
 
 
 public class EditCard extends AppCompatActivity {
