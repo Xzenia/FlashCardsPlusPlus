@@ -58,7 +58,7 @@ public class FlashCardDatabaseController extends SQLiteOpenHelper{
 
     public boolean deleteCard(String firstPart, int deckId){
         SQLiteDatabase db = this.getWritableDatabase();
-        long result = db.delete(TABLENAME,firstPart+" = ? AND "+COLIDENTIFIER+" = ?",new String[]{firstPart, String.valueOf(deckId)});
+        long result = db.delete(TABLENAME,COL2+" = ? AND "+COLIDENTIFIER+" = ?",new String[]{firstPart, String.valueOf(deckId)});
         return result != -1;
     }
 

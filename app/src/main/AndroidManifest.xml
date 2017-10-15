@@ -19,7 +19,7 @@
         <activity android:name=".Add.AddCard" />
         <activity android:name=".Add.AddDeck" />
         <activity android:name=".Viewer.CardViewer" />
-        <activity android:name=".Add.EditCard"></activity>
+        <activity android:name=".Edit.EditCard"></activity>
     </application>
 
 </manifest>

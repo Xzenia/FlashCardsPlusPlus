@@ -1,4 +1,4 @@
-package com.treskie.conrad.flashcardsplus.Add;
+package com.treskie.conrad.flashcardsplus.Edit;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -14,12 +14,13 @@ import com.treskie.conrad.flashcardsplus.Viewer.CardViewer;
 
 
 public class EditCard extends AppCompatActivity {
-    EditText etFirstPart;
-    EditText etSecondPart;
-    int deckIdNumber;
-    String oldFirstPart;
-    String oldSecondPart;
+    private EditText etFirstPart;
+    private EditText etSecondPart;
+    private String oldFirstPart;
+    private String oldSecondPart;
     FlashCardDatabaseController dc;
+
+    private int deckIdNumber;
     private static final String TAG = "EditCard";
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -2,19 +2,21 @@ package com.treskie.conrad.flashcardsplus.Viewer;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.treskie.conrad.flashcardsplus.Add.AddCard;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
-import com.treskie.conrad.flashcardsplus.Add.EditCard;
+import com.treskie.conrad.flashcardsplus.Edit.EditCard;
 import com.treskie.conrad.flashcardsplus.MainActivity;
 import com.treskie.conrad.flashcardsplus.R;
 
@@ -31,6 +33,7 @@ public class CardViewer extends AppCompatActivity {
     ArrayList<String> firstPartArray;
     ArrayList<String> secondPartArray;
 
+    private GestureDetectorCompat gestureObject;
     int indexNumber = 0;
     int idNumber = 0;
 
@@ -40,11 +43,8 @@ public class CardViewer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_viewer);
+        gestureObject = new GestureDetectorCompat(this, new SwipeToSwitchCards());
 
-        if (getSupportActionBar() != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
-        }
 
         dc = new FlashCardDatabaseController(this);
         Intent goBackToMainActivity = new Intent(this,MainActivity.class);
@@ -109,9 +109,9 @@ public class CardViewer extends AppCompatActivity {
 
     }
 
-    //TODO: Add swiping feature to remove placeholder buttons.
+    //TODO: Turn goToNextCard and goToPreviousCard into fragments
 
-    public void goToNextCard(View v){
+    public void goToNextCard(){
         Intent goToNextCard = new Intent(this, CardViewer.class);
 
         if (indexNumber >= firstPartArray.size() - 1){
@@ -124,7 +124,7 @@ public class CardViewer extends AppCompatActivity {
         }
     }
 
-    public void goToPreviousCard(View v){
+    public void goToPreviousCard(){
         Intent goToNextCard = new Intent(this, CardViewer.class);
         if (indexNumber == 0){
             toastMessage("You are in the first card!");
@@ -135,6 +135,30 @@ public class CardViewer extends AppCompatActivity {
             finish();
         }
 
+    }
+
+    //NOTE: This is temporary.
+    public boolean onTouchEvent (MotionEvent event){
+        this.gestureObject.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+    class SwipeToSwitchCards extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onFling(MotionEvent event1, MotionEvent event2,
+                               float velocityX, float velocityY) {
+            //Swipe right
+            if (event2.getX() > event1.getX())
+            {
+                goToPreviousCard();
+            }
+            //swipe left
+            else if (event2.getX() < event1.getX())
+            {
+                goToNextCard();
+            }
+            return true;
+        }
     }
 
     //Top bar menu stuff.
@@ -154,6 +178,7 @@ public class CardViewer extends AppCompatActivity {
                     toastMessage("There are no contents in the deck!");
                 } else {
                     deleteCardActivity(etFirstPart.getText().toString(), idNumber);
+
                     return true;
                 }
             case R.id.action_edit_card:
