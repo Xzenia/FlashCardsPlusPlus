@@ -11,7 +11,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.widget.EditText;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.treskie.conrad.flashcardsplus.Add.AddCard;
@@ -27,8 +29,8 @@ public class CardViewer extends AppCompatActivity {
 
     FlashCardDatabaseController dc;
 
-    EditText etFirstPart;
-    EditText etSecondPart;
+    TextView tvFirstPart;
+    WebView wbSecondPart;
 
     ArrayList<String> firstPartArray;
     ArrayList<String> secondPartArray;
@@ -43,14 +45,11 @@ public class CardViewer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_viewer);
-        gestureObject = new GestureDetectorCompat(this, new SwipeToSwitchCards());
-
-
         dc = new FlashCardDatabaseController(this);
         Intent goBackToMainActivity = new Intent(this,MainActivity.class);
-        etFirstPart = (EditText) findViewById(R.id.firstPart);
-        etSecondPart = (EditText) findViewById(R.id.secondPart);
-
+        gestureObject = new GestureDetectorCompat(this, new SwipeToSwitchCards());
+        tvFirstPart = (TextView) findViewById(R.id.firstPart);
+        wbSecondPart = (WebView) findViewById(R.id.secondPart);
         idNumber = getIdFromMainActivity();
         if (idNumber > 0){
             Log.i(TAG,"Deck ID is received by CardViewer.");
@@ -103,8 +102,9 @@ public class CardViewer extends AppCompatActivity {
         if (firstPartArray.isEmpty()){
             toastMessage("There are no cards in deck!");
         } else {
-            etFirstPart.setText(firstPartArray.get(indexNumber));
-            etSecondPart.setText(secondPartArray.get(indexNumber));
+            String webDataString = "<center> "+secondPartArray.get(indexNumber)+" </center>";
+            tvFirstPart.setText(firstPartArray.get(indexNumber));
+            wbSecondPart.loadData(webDataString, "text/html; charset=utf-8", "UTF-8");
         }
 
     }
@@ -112,26 +112,26 @@ public class CardViewer extends AppCompatActivity {
     //TODO: Turn goToNextCard and goToPreviousCard into fragments
 
     public void goToNextCard(){
-        Intent goToNextCard = new Intent(this, CardViewer.class);
+        Intent nextCard = new Intent(this, CardViewer.class);
 
         if (indexNumber >= firstPartArray.size() - 1){
             toastMessage("This is the end...");
         } else {
-            goToNextCard.putExtra("index", indexNumber + 1);
-            goToNextCard.putExtra("deckId",idNumber);
-            startActivity(goToNextCard);
+            nextCard.putExtra("index", indexNumber + 1);
+            nextCard.putExtra("deckId",idNumber);
+            startActivity(nextCard);
             finish();
         }
     }
 
     public void goToPreviousCard(){
-        Intent goToNextCard = new Intent(this, CardViewer.class);
+        Intent previousCard = new Intent(this, CardViewer.class);
         if (indexNumber == 0){
             toastMessage("You are in the first card!");
         } else {
-            goToNextCard.putExtra("index", indexNumber - 1);
-            goToNextCard.putExtra("deckId",idNumber);
-            startActivity(goToNextCard);
+            previousCard.putExtra("index", indexNumber - 1);
+            previousCard.putExtra("deckId",idNumber);
+            startActivity(previousCard);
             finish();
         }
 
@@ -142,11 +142,11 @@ public class CardViewer extends AppCompatActivity {
         this.gestureObject.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
-    class SwipeToSwitchCards extends GestureDetector.SimpleOnGestureListener {
+
+    private class SwipeToSwitchCards extends GestureDetector.SimpleOnGestureListener {
 
         @Override
-        public boolean onFling(MotionEvent event1, MotionEvent event2,
-                               float velocityX, float velocityY) {
+        public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
             //Swipe right
             if (event2.getX() > event1.getX())
             {
@@ -177,7 +177,7 @@ public class CardViewer extends AppCompatActivity {
                 if (firstPartArray.isEmpty()){
                     toastMessage("There are no contents in the deck!");
                 } else {
-                    deleteCardActivity(etFirstPart.getText().toString(), idNumber);
+                    deleteCardActivity(tvFirstPart.getText().toString(), idNumber);
 
                     return true;
                 }
@@ -202,22 +202,34 @@ public class CardViewer extends AppCompatActivity {
 
     private void goToEditCardActivity(){
         Intent goToEditCard = new Intent (this, EditCard.class);
-        goToEditCard.putExtra("firstPart",etFirstPart.getText().toString());
-        goToEditCard.putExtra("secondPart", etSecondPart.getText().toString());
+        goToEditCard.putExtra("firstPart",tvFirstPart.getText().toString());
+        goToEditCard.putExtra("secondPart", wbSecondPart.toString());
         goToEditCard.putExtra("deckId",idNumber);
         startActivity(goToEditCard);
         finish();
     }
 
+    private void goBackToDeckListViewer(){
+        Intent goToDeckListViewer = new Intent(this, DeckListViewer.class);
+        startActivity(goToDeckListViewer);
+        finish();
+    }
+
     private void deleteCardActivity(String firstPart, int deckId){
         boolean result = dc.deleteCard(firstPart,deckId);
-        if (result){
-            toastMessage("Card successfully deleted!");
+        if (result) {
             Log.i(TAG,"Card successfully deleted");
+            if (!firstPartArray.isEmpty() && indexNumber < firstPartArray.size()) {
+                goToNextCard();
+            } else {
+                goBackToDeckListViewer();
+            }
+
         } else {
             toastMessage("Card was not deleted successfully!");
             Log.e(TAG,"Card was not deleted!");
         }
+        toastMessage("Card successfully deleted!");
 
     }
 
