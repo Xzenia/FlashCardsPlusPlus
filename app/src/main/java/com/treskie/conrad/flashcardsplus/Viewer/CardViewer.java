@@ -11,19 +11,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.treskie.conrad.flashcardsplus.Add.AddCard;
+import com.treskie.conrad.flashcardsplus.Browser.CardBrowser;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
-import com.treskie.conrad.flashcardsplus.Edit.EditCard;
 import com.treskie.conrad.flashcardsplus.MainActivity;
 import com.treskie.conrad.flashcardsplus.R;
 
 import java.util.ArrayList;
-
 
 public class CardViewer extends AppCompatActivity {
 
@@ -39,6 +36,8 @@ public class CardViewer extends AppCompatActivity {
     int indexNumber = 0;
     int idNumber = 0;
 
+    String sSecondPart;
+
     private static final String TAG = "CardViewer";
 
     @Override
@@ -53,6 +52,7 @@ public class CardViewer extends AppCompatActivity {
         idNumber = getIdFromMainActivity();
         if (idNumber > 0){
             Log.i(TAG,"Deck ID is received by CardViewer.");
+            toastMessage(""+idNumber);
             /*
                 getCards(idNumber) - gets all cards on deck and puts them in the ArrayList
 
@@ -103,14 +103,12 @@ public class CardViewer extends AppCompatActivity {
             toastMessage("There are no cards in deck!");
         } else {
             String webDataString = "<center> "+secondPartArray.get(indexNumber)+" </center>";
+            sSecondPart = secondPartArray.get(indexNumber);
             tvFirstPart.setText(firstPartArray.get(indexNumber));
             wbSecondPart.loadData(webDataString, "text/html; charset=utf-8", "UTF-8");
         }
-
     }
-
     //TODO: Turn goToNextCard and goToPreviousCard into fragments
-
     public void goToNextCard(){
         Intent nextCard = new Intent(this, CardViewer.class);
 
@@ -136,7 +134,6 @@ public class CardViewer extends AppCompatActivity {
         }
 
     }
-
     //NOTE: This is temporary.
     public boolean onTouchEvent (MotionEvent event){
         this.gestureObject.onTouchEvent(event);
@@ -144,7 +141,6 @@ public class CardViewer extends AppCompatActivity {
     }
 
     private class SwipeToSwitchCards extends GestureDetector.SimpleOnGestureListener {
-
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
             //Swipe right
@@ -160,7 +156,6 @@ public class CardViewer extends AppCompatActivity {
             return true;
         }
     }
-
     //Top bar menu stuff.
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
@@ -170,71 +165,22 @@ public class CardViewer extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
-            case R.id.action_add_card:
-                goToAddCardActivity();
+            case R.id.action_card_list:
+                goToCardList();
                 return true;
-            case R.id.action_delete_card:
-                if (firstPartArray.isEmpty()){
-                    toastMessage("There are no contents in the deck!");
-                } else {
-                    deleteCardActivity(tvFirstPart.getText().toString(), idNumber);
-
-                    return true;
-                }
-            case R.id.action_edit_card:
-                if (firstPartArray.isEmpty()){
-                    toastMessage("There are no contents in the deck!");
-                } else {
-                    goToEditCardActivity();
-                    return true;
-                }
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void goToAddCardActivity(){
-        Intent goToAddCard = new Intent(this, AddCard.class);
-        goToAddCard.putExtra("deckId",idNumber);
-        startActivity(goToAddCard);
+    private void goToCardList(){
+        Intent goToCardList = new Intent(this, CardBrowser.class);
+        goToCardList.putExtra("deckId", idNumber);
+        startActivity(goToCardList);
         finish();
-    }
-
-    private void goToEditCardActivity(){
-        Intent goToEditCard = new Intent (this, EditCard.class);
-        goToEditCard.putExtra("firstPart",tvFirstPart.getText().toString());
-        goToEditCard.putExtra("secondPart", wbSecondPart.toString());
-        goToEditCard.putExtra("deckId",idNumber);
-        startActivity(goToEditCard);
-        finish();
-    }
-
-    private void goBackToDeckListViewer(){
-        Intent goToDeckListViewer = new Intent(this, DeckListViewer.class);
-        startActivity(goToDeckListViewer);
-        finish();
-    }
-
-    private void deleteCardActivity(String firstPart, int deckId){
-        boolean result = dc.deleteCard(firstPart,deckId);
-        if (result) {
-            Log.i(TAG,"Card successfully deleted");
-            if (!firstPartArray.isEmpty() && indexNumber < firstPartArray.size()) {
-                goToNextCard();
-            } else {
-                goBackToDeckListViewer();
-            }
-
-        } else {
-            toastMessage("Card was not deleted successfully!");
-            Log.e(TAG,"Card was not deleted!");
-        }
-        toastMessage("Card successfully deleted!");
-
     }
 
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
-
 }

@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Flashcards++</string>
+    <string name="add_flashcard"> Add Flashcard </string>
+    <string name="add_deck"> Add Deck </string>
+    <string name="edit_flashcard"> Edit Flashcard </string>
+    <string name="edit_Button"> Edit </string>
+
+
+    <!-- Hints -->
+    <string name="name_of_deck"> Name of Deck </string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

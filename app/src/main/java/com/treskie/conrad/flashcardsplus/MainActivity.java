@@ -61,13 +61,10 @@ public class MainActivity extends AppCompatActivity {
         Cursor data = mDB.getData();
         ArrayList<String> listData = new ArrayList<>();
         //goes through all the entries in the deck database and adds them to the ArrayList
-
         while(data.moveToNext()){
             listData.add(data.getString(1));
         }
-
         //  Note: simple_list_item_1 is a list layout that only displays one line of text per entry
-        //  TODO: Change the layout to accommodate more information
         final ListAdapter adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,listData);
         lvListView.setAdapter(adapter);
         lvListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -88,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     public void viewItem(int id){
@@ -96,9 +92,7 @@ public class MainActivity extends AppCompatActivity {
         goToEditActivity.putExtra("deckId",id);
         startActivity(goToEditActivity);
     }
-
     //Makes popup messages. Good for debugging mostly.
-
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }

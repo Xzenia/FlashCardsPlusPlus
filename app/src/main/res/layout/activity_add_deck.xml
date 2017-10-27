@@ -10,7 +10,7 @@
         android:id="@+id/addCardTextView"
         android:layout_width="183dp"
         android:layout_height="29dp"
-        android:text="Add Deck"
+        android:text="@string/add_deck"
         android:gravity = "center"
         android:textSize = "22sp"
         android:layout_marginRight="8dp"
@@ -26,11 +26,11 @@
 
     <EditText
         android:id="@+id/deckNameField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="318dp"
+        android:layout_height="44dp"
         android:ems="16"
         android:inputType="textPersonName"
-        android:hint="Name of Deck"
+        android:hint="@string/name_of_deck"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="167dp"
         android:layout_marginRight="8dp"
@@ -39,13 +39,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/addButton"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="46dp" />
 
     <Button
         android:id="@+id/addButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Flashcard"
+        android:text="@string/add_deck"
         android:onClick="addDeckMethod"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"

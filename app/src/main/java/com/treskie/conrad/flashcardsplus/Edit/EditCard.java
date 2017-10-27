@@ -12,7 +12,6 @@ import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
 import com.treskie.conrad.flashcardsplus.R;
 import com.treskie.conrad.flashcardsplus.Viewer.CardViewer;
 
-
 public class EditCard extends AppCompatActivity {
     private EditText etFirstPart;
     private EditText etSecondPart;

@@ -16,8 +16,8 @@ public class AddCard extends AppCompatActivity {
     EditText mFirstPart;
     EditText mSecondPart;
     FlashCardDatabaseController dc;
+    int getDeckId;
     private static final String TAG = "AddCard";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,30 +25,23 @@ public class AddCard extends AppCompatActivity {
         mFirstPart = (EditText) findViewById(R.id.firstPart);
         mSecondPart = (EditText) findViewById(R.id.secondPart);
         dc = new FlashCardDatabaseController(this);
-
-
+        Bundle getInfo = getIntent().getExtras();
+        getDeckId = getInfo.getInt("deckId");
+        toastMessage("Deck ID: "+getDeckId);
     }
+
     public void saveToDatabase(View v){
         Intent goToDeckViewer = new Intent(this, MainActivity.class);
 
-        //get ID number to identify what deck the card is part of.
-        Bundle getInfo = getIntent().getExtras();
-        int getDeckId = getInfo.getInt("deckId");
-        toastMessage("Deck ID: "+getDeckId);
-
         //generates an individual id number for the card. Might remove this soon.
         int id = 111111 + (int) (Math.random() * 999999);
-
         /*
             Grabs data from the two text fields
             Look into /res/layout/activity_add_card.xml for said text fields
         */
-
         String firstPart = mFirstPart.getText().toString();
         String secondPart = mSecondPart.getText().toString();
-
         boolean confirm = dc.addData(id,getDeckId,firstPart,secondPart);
-
         if (confirm){
             toastMessage("Card Successfully Added!");
             startActivity(goToDeckViewer);

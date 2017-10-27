@@ -10,14 +10,12 @@ import android.util.Log;
 
 public class FlashCardDatabaseController extends SQLiteOpenHelper{
     private static final String TAG = "FlashCardDatabase";
-
     private static final String TABLENAME = "card";
     private static final String COLID = "_ID";
     private static final String COLIDENTIFIER="IDENTIFIER";
     private static final String COL2 = "firstPart";
     private static final String COL3 = "secondPart";
     private static final int DATABASEVERSION = 3;
-
 
     public FlashCardDatabaseController(Context context){
         super(context,TABLENAME,null,DATABASEVERSION);
@@ -45,7 +43,6 @@ public class FlashCardDatabaseController extends SQLiteOpenHelper{
         long result = db.insert(TABLENAME,null,contentValues);
         return result != -1;
     }
-
     //TODO: Replace firstPart with card index number
     public boolean updateCard(String oldFirstPart, String oldSecondPart,String newFirstPart, String newSecondPart,int deckId){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -61,7 +58,6 @@ public class FlashCardDatabaseController extends SQLiteOpenHelper{
         long result = db.delete(TABLENAME,COL2+" = ? AND "+COLIDENTIFIER+" = ?",new String[]{firstPart, String.valueOf(deckId)});
         return result != -1;
     }
-
 
     public Cursor getData(int id){
         SQLiteDatabase db = this.getWritableDatabase();
