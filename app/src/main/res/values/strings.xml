@@ -4,9 +4,13 @@
     <string name="add_deck"> Add Deck </string>
     <string name="edit_flashcard"> Edit Flashcard </string>
     <string name="edit_Button"> Edit </string>
-
+    <string name="delete_button"> Delete </string>
+    <string name="help_button"> Help </string>
+    <string name="about_button">About </string>
 
     <!-- Hints -->
     <string name="name_of_deck"> Name of Deck </string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="question_template"> Question </string>
+    <string name="answer_template"> Answer </string>
+
 </resources>

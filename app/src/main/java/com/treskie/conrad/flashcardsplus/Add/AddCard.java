@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.treskie.conrad.flashcardsplus.Browser.CardBrowser;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
 import com.treskie.conrad.flashcardsplus.MainActivity;
 import com.treskie.conrad.flashcardsplus.R;
@@ -31,9 +32,7 @@ public class AddCard extends AppCompatActivity {
     }
 
     public void saveToDatabase(View v){
-        Intent goToDeckViewer = new Intent(this, MainActivity.class);
-
-        //generates an individual id number for the card. Might remove this soon.
+        Intent goToDeckViewer = new Intent(this, CardBrowser.class);
         int id = 111111 + (int) (Math.random() * 999999);
         /*
             Grabs data from the two text fields
@@ -44,6 +43,7 @@ public class AddCard extends AppCompatActivity {
         boolean confirm = dc.addData(id,getDeckId,firstPart,secondPart);
         if (confirm){
             toastMessage("Card Successfully Added!");
+            goToDeckViewer.putExtra("deckId",getDeckId);
             startActivity(goToDeckViewer);
             finish();
         } else {

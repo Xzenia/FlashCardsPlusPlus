@@ -11,17 +11,23 @@
         <TextView
             android:id="@+id/question_text"
             android:layout_width="wrap_content"
-            android:layout_height="52dp"
-            android:text="Question"
-            android:layout_weight="1.52">
+            android:layout_height="50dp"
+            android:text="@string/question_template"
+            android:gravity="center_horizontal"
+            android:layout_weight="1.84"
+            android:paddingRight="10dp">
         </TextView>
 
         <TextView
             android:id="@+id/answer_text"
             android:layout_width="wrap_content"
-            android:layout_height="52dp"
-            android:text="Answer"
-            android:layout_weight="2.00">
+            android:layout_height="50dp"
+            android:text="@string/answer_template"
+            android:gravity="center_horizontal"
+            android:layout_weight="2.00"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingEnd="10dp">
         </TextView>
 
     </LinearLayout>

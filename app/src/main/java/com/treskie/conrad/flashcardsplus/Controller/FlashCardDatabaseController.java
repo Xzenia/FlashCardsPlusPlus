@@ -44,24 +44,31 @@ public class FlashCardDatabaseController extends SQLiteOpenHelper{
         return result != -1;
     }
     //TODO: Replace firstPart with card index number
-    public boolean updateCard(String oldFirstPart, String oldSecondPart,String newFirstPart, String newSecondPart,int deckId){
+    public boolean updateCard(String newFirstPart, String newSecondPart,int cardId){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL2,newFirstPart);
         contentValues.put(COL3,newSecondPart);
-        long result = db.update(TABLENAME,contentValues,COL2+" = ? AND "+COL3+" = ? AND "+COLIDENTIFIER+" = ?",new String[]{oldFirstPart,oldSecondPart,Integer.toString(deckId)});
+        long result = db.update(TABLENAME,contentValues,COLID+" = ?",new String[]{Integer.toString(cardId)});
         return result != -1;
     }
 
-    public boolean deleteCard(String firstPart, int deckId){
+    public boolean deleteCard(int cardId, int deckId){
         SQLiteDatabase db = this.getWritableDatabase();
-        long result = db.delete(TABLENAME,COL2+" = ? AND "+COLIDENTIFIER+" = ?",new String[]{firstPart, String.valueOf(deckId)});
+        long result = db.delete(TABLENAME,COLID+" = ? AND "+COLIDENTIFIER+" = ?",new String[]{String.valueOf(cardId), String.valueOf(deckId)});
         return result != -1;
     }
-
-    public Cursor getData(int id){
+    //TODO: Refactor this into something more appropriate like getDeckData
+    public Cursor getData(int deckId){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM "+TABLENAME+ " WHERE IDENTIFIER="+id;
+        String query = "SELECT * FROM "+TABLENAME+ " WHERE IDENTIFIER="+deckId;
+        Cursor data = db.rawQuery(query,null);
+        return data;
+    }
+
+    public Cursor getSpecificCard(int cardId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM "+TABLENAME+ " WHERE _ID = "+cardId;
         Cursor data = db.rawQuery(query,null);
         return data;
     }

@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +47,7 @@ public class CardViewer extends AppCompatActivity {
         setContentView(R.layout.activity_card_viewer);
         dc = new FlashCardDatabaseController(this);
         Intent goBackToMainActivity = new Intent(this,MainActivity.class);
-        gestureObject = new GestureDetectorCompat(this, new SwipeToSwitchCards());
+        gestureObject = new GestureDetectorCompat(this, new detectGestureMethod());
         tvFirstPart = (TextView) findViewById(R.id.firstPart);
         wbSecondPart = (WebView) findViewById(R.id.secondPart);
         idNumber = getIdFromMainActivity();
@@ -65,6 +66,8 @@ public class CardViewer extends AppCompatActivity {
             getCards(idNumber);
             indexNumber = getIndexFromPreviousActivity();
             showCard(indexNumber);
+
+            wbSecondPart.setVisibility(View.INVISIBLE);
 
         } else {
             Log.d(TAG,"Deck ID was not successfully received by CardViewer!");
@@ -85,8 +88,6 @@ public class CardViewer extends AppCompatActivity {
         int index = getIndex.getInt("index");
         return index;
     }
-
-    //TODO: Find a better way that doesn't involve ArrayLists
 
     private void getCards(int id){
         Cursor data = dc.getData(id);
@@ -140,7 +141,7 @@ public class CardViewer extends AppCompatActivity {
         return super.onTouchEvent(event);
     }
 
-    private class SwipeToSwitchCards extends GestureDetector.SimpleOnGestureListener {
+    private class detectGestureMethod extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
             //Swipe right
@@ -154,6 +155,10 @@ public class CardViewer extends AppCompatActivity {
                 goToNextCard();
             }
             return true;
+        }
+        public boolean onDoubleTap(MotionEvent e) {
+            wbSecondPart.setVisibility(View.VISIBLE);
+            return super.onDoubleTap(e);
         }
     }
     //Top bar menu stuff.
