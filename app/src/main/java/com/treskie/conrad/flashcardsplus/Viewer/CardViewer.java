@@ -75,6 +75,7 @@ public class CardViewer extends AppCompatActivity {
             finish();
         }
 
+
     }
 
     private int getIdFromMainActivity(){
@@ -114,7 +115,10 @@ public class CardViewer extends AppCompatActivity {
         Intent nextCard = new Intent(this, CardViewer.class);
 
         if (indexNumber >= firstPartArray.size() - 1){
-            toastMessage("This is the end...");
+            nextCard.putExtra("index", 0);
+            nextCard.putExtra("deckId",idNumber);
+            startActivity(nextCard);
+            finish();
         } else {
             nextCard.putExtra("index", indexNumber + 1);
             nextCard.putExtra("deckId",idNumber);
@@ -143,16 +147,20 @@ public class CardViewer extends AppCompatActivity {
 
     private class detectGestureMethod extends GestureDetector.SimpleOnGestureListener {
         @Override
+        //TODO: Replace from_middle and to_middle with better animations.
         public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX, float velocityY) {
             //Swipe right
             if (event2.getX() > event1.getX())
             {
                 goToPreviousCard();
+                overridePendingTransition(R.anim.from_middle, R.anim.to_middle);
+
             }
             //swipe left
             else if (event2.getX() < event1.getX())
             {
                 goToNextCard();
+                overridePendingTransition(R.anim.from_middle, R.anim.to_middle);
             }
             return true;
         }

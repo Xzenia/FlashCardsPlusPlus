@@ -5,7 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 
 public class FlashCardDatabaseController extends SQLiteOpenHelper{
@@ -72,6 +79,45 @@ public class FlashCardDatabaseController extends SQLiteOpenHelper{
         Cursor data = db.rawQuery(query,null);
         return data;
     }
+
+    public boolean exportCardData(Context mContext) {
+        File sdCard = Environment.getExternalStorageDirectory();
+        String backupDBPath  = getDatabaseName();
+        String currentDBPath = mContext.getDatabasePath(backupDBPath).toString();
+        File currentDB = new File(currentDBPath);
+        File backupDB = new File(sdCard, backupDBPath);
+        try {
+            FileChannel source = new FileInputStream(currentDB).getChannel();
+            FileChannel destination = new FileOutputStream(backupDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean importCardData(Context mContext) {
+        File sdCard = Environment.getExternalStorageDirectory();
+        String backupDBPath = getDatabaseName();
+        String targetDBPath = mContext.getDatabasePath(backupDBPath).toString();
+        File targetDB = new File(targetDBPath);
+        File backupDB = new File(sdCard, backupDBPath);
+        try {
+            FileChannel source = new FileInputStream(backupDB).getChannel();
+            FileChannel destination = new FileOutputStream(targetDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
 
 }

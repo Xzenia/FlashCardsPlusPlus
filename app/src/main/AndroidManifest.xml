@@ -20,7 +20,11 @@
         <activity android:name=".Add.AddDeck" />
         <activity android:name=".Viewer.CardViewer" />
         <activity android:name=".Edit.EditCard" />
-        <activity android:name=".Browser.CardBrowser"></activity>
+        <activity android:name=".Browser.CardBrowser"/>
+
     </application>
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

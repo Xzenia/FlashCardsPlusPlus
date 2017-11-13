@@ -5,7 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 
 public class DeckDatabaseController extends SQLiteOpenHelper {
@@ -16,9 +23,10 @@ public class DeckDatabaseController extends SQLiteOpenHelper {
     private static final String COL1 = "name";
 
     private static final int DATABASEVERSION = 1;
-
+    private Context mContext;
     public DeckDatabaseController(Context context){
         super(context,TABLENAME,null,DATABASEVERSION);
+        mContext = context;
     }
 
     public void onCreate(SQLiteDatabase db){
@@ -31,7 +39,6 @@ public class DeckDatabaseController extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int newVersion, int oldVersion) {
         db.execSQL("DROP TABLE IF EXISTS "+ TABLENAME);
         onCreate(db);
-        //TODO: Test this by changing the structure of the database.
     }
 
     public boolean addData(int id, String name){
@@ -58,11 +65,48 @@ public class DeckDatabaseController extends SQLiteOpenHelper {
         return data;
     }
 
-    public boolean deleteCard(int deckId){
+    public boolean deleteDeck(int deckId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        long result = db.delete(TABLENAME,COLID+" = ?",new String[]{String.valueOf(deckId)});
+        long result = db.delete(TABLENAME, COLID + " = ?", new String[]{String.valueOf(deckId)});
         return result != -1;
     }
 
+    public boolean exportDeckData(Context mContext) {
+        File sdCard = Environment.getExternalStorageDirectory();
+        String backupDBPath= getDatabaseName();
+        String currentDBPath = mContext.getDatabasePath(backupDBPath).toString();
+        File currentDB = new File(currentDBPath);
+        File backupDB = new File(sdCard, backupDBPath);
+        try {
+            FileChannel source = new FileInputStream(currentDB).getChannel();
+            FileChannel destination = new FileOutputStream(backupDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean importDeckData(Context mContext) {
+        File sdCard = Environment.getExternalStorageDirectory();
+        String backupDBPath = getDatabaseName();
+        String targetDBPath = mContext.getDatabasePath(backupDBPath).toString();
+        File targetDB = new File(targetDBPath);
+        File backupDB = new File(sdCard, backupDBPath);
+        try {
+            FileChannel source = new FileInputStream(backupDB).getChannel();
+            FileChannel destination = new FileOutputStream(targetDB).getChannel();
+            destination.transferFrom(source, 0, source.size());
+            source.close();
+            destination.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 }

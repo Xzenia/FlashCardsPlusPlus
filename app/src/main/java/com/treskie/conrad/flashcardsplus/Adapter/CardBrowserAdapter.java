@@ -17,10 +17,10 @@ import static com.treskie.conrad.flashcardsplus.CardBrowserColumns.answerRow;
 import static com.treskie.conrad.flashcardsplus.CardBrowserColumns.questionRow;
 
 public class CardBrowserAdapter extends BaseAdapter{
-    public ArrayList <HashMap<String,String>> list;
-    Activity activity;
-    TextView tvQuestion;
-    TextView tvAnswer;
+    private ArrayList <HashMap<String,String>> list;
+    private Activity activity;
+    private TextView tvQuestion;
+    private TextView tvAnswer;
 
     public CardBrowserAdapter (Activity activity,ArrayList<HashMap<String, String>> list){
         super();
@@ -47,13 +47,13 @@ public class CardBrowserAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = activity.getLayoutInflater();
         if(convertView == null){
-            convertView = inflater.inflate(R.layout.card_browser_rows,null);
+            convertView = inflater.inflate(R.layout.card_browser_rows, null);
             tvAnswer = convertView.findViewById(R.id.answer_text);
             tvQuestion = convertView.findViewById(R.id.question_text);
         }
         HashMap<String, String> map = list.get(position);
-        tvAnswer.setText(map.get(questionRow));
-        tvQuestion.setText(map.get(answerRow));
+        tvQuestion.setText(map.get(questionRow));
+        tvAnswer.setText(map.get(answerRow));
         return convertView;
     }
 }

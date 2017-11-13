@@ -4,16 +4,11 @@
 
         <item
             android:id="@+id/action_card_list"
-            android:title="Card List"
-            app:showAsAction="never" />
-
-        <item
-            android:id="@+id/action_edit_card"
-            android:title="Edit Card"
+            android:title="@string/card_list_menu_item"
             app:showAsAction="never" />
 
         <item
             android:id="@+id/action_help"
-            android:title="Help"
+            android:title="@string/help_button"
             app:showAsAction="never" />
     </menu>

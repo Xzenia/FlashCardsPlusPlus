@@ -20,12 +20,12 @@
 
     <WebView
         android:id="@+id/secondPart"
-        android:layout_width="344dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstPart"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/firstPart"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:padding="10dp" />
 </android.support.constraint.ConstraintLayout>

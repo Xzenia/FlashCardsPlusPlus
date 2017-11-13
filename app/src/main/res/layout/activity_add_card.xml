@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/addFlashCard"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/add_flashcard"
         android:gravity="center"
@@ -22,9 +22,9 @@
 
     <EditText
         android:id="@+id/firstPart"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="16"
+        android:ems="12"
         android:inputType="textPersonName"
         android:hint="@string/question_template"
         app:layout_constraintRight_toRightOf="parent"
@@ -34,9 +34,9 @@
 
     <EditText
         android:id="@+id/secondPart"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:ems="12"
         android:inputType="textMultiLine"
         android:hint="@string/answer_template"
         app:layout_constraintRight_toRightOf="parent"
