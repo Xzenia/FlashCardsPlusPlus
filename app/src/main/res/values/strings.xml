@@ -20,4 +20,9 @@
     <string name="help_menu_item">Help</string>
     <string name="add_menu_item">Add</string>
 
+    <!-- Context Menu -->
+    <string name="context_menu_addCard">Add a card</string>
+    <string name="context_menu_rename_deck">Rename Deck</string>
+    <string name="context_menu_deleteDeck">Delete Deck</string>
+
 </resources>

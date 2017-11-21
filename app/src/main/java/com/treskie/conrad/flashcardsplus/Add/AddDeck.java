@@ -16,7 +16,7 @@ public class AddDeck extends AppCompatActivity {
     EditText mDeckName;
     DeckDatabaseController db;
     private static final String TAG = "AddDeck";
-
+    //TODO: Add a method that checks if the name of the new deck is the same as an existing one.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

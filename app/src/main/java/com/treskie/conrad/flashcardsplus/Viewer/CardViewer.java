@@ -25,19 +25,19 @@ import java.util.ArrayList;
 
 public class CardViewer extends AppCompatActivity {
 
-    FlashCardDatabaseController dc;
+    private FlashCardDatabaseController dc;
 
-    TextView tvFirstPart;
-    WebView wbSecondPart;
+    private TextView tvFirstPart;
+    private WebView wbSecondPart;
 
-    ArrayList<String> firstPartArray;
-    ArrayList<String> secondPartArray;
+    private ArrayList<String> firstPartArray;
+    private ArrayList<String> secondPartArray;
 
     private GestureDetectorCompat gestureObject;
-    int indexNumber = 0;
-    int idNumber = 0;
+    private int indexNumber = 0;
+    private int idNumber = 0;
 
-    String sSecondPart;
+    private String sSecondPart;
 
     private static final String TAG = "CardViewer";
 
@@ -45,12 +45,14 @@ public class CardViewer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_viewer);
+
         dc = new FlashCardDatabaseController(this);
         Intent goBackToMainActivity = new Intent(this,MainActivity.class);
-        gestureObject = new GestureDetectorCompat(this, new detectGestureMethod());
         tvFirstPart = (TextView) findViewById(R.id.firstPart);
         wbSecondPart = (WebView) findViewById(R.id.secondPart);
         idNumber = getIdFromMainActivity();
+        gestureObject = new GestureDetectorCompat(this, new detectGestureMethod());
+
         if (idNumber > 0){
             Log.i(TAG,"Deck ID is received by CardViewer.");
             toastMessage(""+idNumber);
@@ -66,7 +68,6 @@ public class CardViewer extends AppCompatActivity {
             getCards(idNumber);
             indexNumber = getIndexFromPreviousActivity();
             showCard(indexNumber);
-
             wbSecondPart.setVisibility(View.INVISIBLE);
 
         } else {
@@ -74,8 +75,6 @@ public class CardViewer extends AppCompatActivity {
             startActivity(goBackToMainActivity);
             finish();
         }
-
-
     }
 
     private int getIdFromMainActivity(){
@@ -154,7 +153,6 @@ public class CardViewer extends AppCompatActivity {
             {
                 goToPreviousCard();
                 overridePendingTransition(R.anim.from_middle, R.anim.to_middle);
-
             }
             //swipe left
             else if (event2.getX() < event1.getX())
@@ -164,6 +162,7 @@ public class CardViewer extends AppCompatActivity {
             }
             return true;
         }
+
         public boolean onDoubleTap(MotionEvent e) {
             wbSecondPart.setVisibility(View.VISIBLE);
             return super.onDoubleTap(e);

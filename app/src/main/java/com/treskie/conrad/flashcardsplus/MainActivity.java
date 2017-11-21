@@ -1,10 +1,12 @@
 package com.treskie.conrad.flashcardsplus;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,7 +17,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-
+import com.treskie.conrad.flashcardsplus.Add.AddCard;
 import com.treskie.conrad.flashcardsplus.Add.AddDeck;
 import com.treskie.conrad.flashcardsplus.Controller.DeckDatabaseController;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
@@ -25,9 +27,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    DeckDatabaseController deckController;
-    FlashCardDatabaseController flashCardController;
+    private DeckDatabaseController deckController;
+    private FlashCardDatabaseController flashCardController;
     private ListView lvListView;
+    private String deckName = "";
+    private int deckId = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,18 +41,14 @@ public class MainActivity extends AppCompatActivity {
         deckController = new DeckDatabaseController(this);
         flashCardController = new FlashCardDatabaseController(this);
         populateListView();
-    }
+        registerForContextMenu(lvListView);
 
-    public void goToAddProductActivity(){
-        Intent addProductActivity = new Intent(this, AddDeck.class);
-        startActivity(addProductActivity);
-        finish();
     }
 
     private void populateListView(){
         Cursor data = deckController.getData();
-        ArrayList<String> listData = new ArrayList<>();
         //goes through all the entries in the deck database and adds them to the ArrayList
+        ArrayList<String> listData = new ArrayList<>();
         while(data.moveToNext()){
             listData.add(data.getString(1));
         }
@@ -55,15 +56,11 @@ public class MainActivity extends AppCompatActivity {
         final ListAdapter adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,listData);
         lvListView.setAdapter(adapter);
         lvListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
-                String deckName = adapterView.getItemAtPosition(i).toString();
-                int deckId = 0;
-                Log.d(TAG, "onItemClick: User clicked on "+deckName);
-                Cursor data = deckController.getIdData(deckName);
-                while (data.moveToNext()){
-                    deckId = data.getInt(0);
-                }
-                if (deckId > 0){
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                deckName = adapterView.getItemAtPosition(i).toString();
+                Log.d(TAG, "onItemClick: User clicked on " + deckName);
+                deckId = getDeckId(deckName);
+                if (deckId > 0) {
                     Log.d(TAG, "onItemClick: The Deck ID is: " + deckId);
                     viewItem(deckId);
                 } else {
@@ -72,6 +69,28 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public int getDeckId(String deckName){
+        int id = 0;
+        Cursor data = deckController.getIdData(deckName);
+        while (data.moveToNext()) {
+            id = data.getInt(0);
+        }
+        return id;
+    }
+    //Intents
+    public void goToAddDeckActivity(){
+        Intent addDeckActivity = new Intent(this, AddDeck.class);
+        startActivity(addDeckActivity);
+        finish();
+    }
+
+    public void goToAddCardActivity(){
+        Intent addCardActivity = new Intent(this, AddCard.class);
+        addCardActivity.putExtra("deckId", deckId);
+        startActivity(addCardActivity);
+        finish();
     }
 
     public void viewItem(int id){
@@ -89,13 +108,38 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.action_add_deck:
-                goToAddProductActivity();
+                goToAddDeckActivity();
                 return true;
             case R.id.action_backup_data:
                 backupData();
                 return true;
             case R.id.action_restore_data:
                 restoreData();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    //Context Menu. Shows up when a listview item is held long enough.
+    public void onCreateContextMenu(ContextMenu menu, View contextView, ContextMenu.ContextMenuInfo menuInfo){
+        super.onCreateContextMenu(menu, contextView, menuInfo);
+        //AdapterView.AdapterContextMenuInfo -> extra menu information provided to the onCreateContextMenu
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        MenuInflater inflater = getMenuInflater();
+        deckName = lvListView.getItemAtPosition(info.position).toString();
+        menu.setHeaderTitle(deckName);
+        deckId = getDeckId(deckName);
+        inflater.inflate(R.menu.main_activity_context_menu, menu);
+    }
+    //If any of the items in the context menu are selected
+    public boolean onContextItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.addCard:
+                goToAddCardActivity();
+                return true;
+            case R.id.renameDeck:
+                return true;
+            case R.id.deleteDeck:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -118,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "All else-if cases have failed in backupData()!");
         }
     }
+
     private void restoreData() {
         boolean confirmDeckImport = deckController.importDeckData(this);
         boolean confirmCardImport = flashCardController.importCardData(this);

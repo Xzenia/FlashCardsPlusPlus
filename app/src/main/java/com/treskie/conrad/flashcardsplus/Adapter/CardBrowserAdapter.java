@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.treskie.conrad.flashcardsplus.CardBrowserColumns.*;
 import com.treskie.conrad.flashcardsplus.R;
 
 import static com.treskie.conrad.flashcardsplus.CardBrowserColumns.answerRow;
@@ -19,13 +18,17 @@ import static com.treskie.conrad.flashcardsplus.CardBrowserColumns.questionRow;
 public class CardBrowserAdapter extends BaseAdapter{
     private ArrayList <HashMap<String,String>> list;
     private Activity activity;
-    private TextView tvQuestion;
-    private TextView tvAnswer;
+
 
     public CardBrowserAdapter (Activity activity,ArrayList<HashMap<String, String>> list){
         super();
         this.activity=activity;
         this.list=list;
+    }
+
+    static class ViewHolder{
+        private TextView tvQuestion;
+        private TextView tvAnswer;
     }
 
     @Override
@@ -46,14 +49,16 @@ public class CardBrowserAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = activity.getLayoutInflater();
+        ViewHolder holder = new ViewHolder();
         if(convertView == null){
             convertView = inflater.inflate(R.layout.card_browser_rows, null);
-            tvAnswer = convertView.findViewById(R.id.answer_text);
-            tvQuestion = convertView.findViewById(R.id.question_text);
+            holder.tvAnswer = convertView.findViewById(R.id.answer_text);
+            holder.tvQuestion = convertView.findViewById(R.id.question_text);
+            convertView.setTag(holder);
         }
         HashMap<String, String> map = list.get(position);
-        tvQuestion.setText(map.get(questionRow));
-        tvAnswer.setText(map.get(answerRow));
+        holder.tvQuestion.setText(map.get(questionRow));
+        holder.tvAnswer.setText(map.get(answerRow));
         return convertView;
     }
 }
