@@ -83,7 +83,6 @@ public class CardBrowser extends AppCompatActivity {
         Intent addCard = new Intent(this, AddCard.class);
         addCard.putExtra("deckId",deckId);
         startActivity(addCard);
-        finish();
     }
 
     public void goToEditActivity(int card, int deck){
@@ -91,7 +90,7 @@ public class CardBrowser extends AppCompatActivity {
         editCard.putExtra("cardId", card);
         editCard.putExtra("deckId", deck);
         startActivity(editCard);
-        finish();
+
     }
 
     public int getIdData() {

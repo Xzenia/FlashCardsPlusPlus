@@ -65,9 +65,24 @@ public class DeckDatabaseController extends SQLiteOpenHelper {
         return data;
     }
 
+    public boolean checkIfDeckNameExists(String deckName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM "+TABLENAME+" WHERE "+COL1+ " = '"+ deckName + "';";
+        Cursor data = db.rawQuery(query,null);
+        return data != null;
+    }
+
     public boolean deleteDeck(int deckId) {
         SQLiteDatabase db = this.getWritableDatabase();
         long result = db.delete(TABLENAME, COLID + " = ?", new String[]{String.valueOf(deckId)});
+        return result != -1;
+    }
+
+    public boolean renameDeck(String newDeckName, int deckId){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL1, newDeckName);
+        long result = db.update(TABLENAME,contentValues,COLID+" = ?",new String[]{Integer.toString(deckId)});
         return result != -1;
     }
 

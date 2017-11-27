@@ -1,0 +1,37 @@
+<TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/question_text"
+                android:width="50dp"
+                android:height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/question_template"
+                android:gravity="left"
+                android:layout_weight="1"
+                android:padding="2dp"
+                android:layout_column="1">
+            </TextView>
+
+            <TextView
+                android:id="@+id/answer_text"
+                android:width="50dp"
+                android:height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/answer_template"
+                android:gravity="left"
+                android:layout_weight="1"
+                android:padding="2dp"
+                android:layout_column="2">
+            </TextView>
+
+        </TableRow>
+
+    </TableLayout>

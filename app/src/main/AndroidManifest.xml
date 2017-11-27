@@ -20,9 +20,14 @@
         <activity android:name=".Viewer.CardViewer" />
         <activity android:name=".Edit.EditCard" />
         <activity android:name=".Browser.CardBrowser"/>
+        <activty android:name=".Add.AddImage" />
+        <activity android:name=".Edit.RenameDeck"/>
+        <activity android:name=".Add.AddImage" />
+
+    </application>
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    </application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 </manifest>

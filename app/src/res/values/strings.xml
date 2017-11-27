@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Flashcards++</string>
+    <string name="add_flashcard"> Add Flashcard </string>
+    <string name="add_deck"> Add Deck </string>
+    <string name="edit_flashcard"> Edit Flashcard </string>
+    <string name="edit_Button"> Edit </string>
+    <string name="delete_button"> Delete </string>
+
+    <!-- Hints -->
+    <string name="name_of_deck"> Name of Deck </string>
+    <string name="question_template"> Question </string>
+    <string name="answer_template"> Answer </string>
+
+    <!-- Menu -->
+    <string name="backup_data_menu_item"> Backup Data </string>
+    <string name="card_list_menu_item"> Card List </string>
+    <string name="help_button"> Help </string>
+    <string name="about_button">About </string>
+    <string name="import_data_menu_item">Import Data</string>
+    <string name="help_menu_item">Help</string>
+    <string name="add_menu_item">Add</string>
+
+    <!-- Context Menu -->
+    <string name="context_menu_addCard">Add a card</string>
+    <string name="context_menu_rename_deck">Rename Deck</string>
+    <string name="context_menu_deleteDeck">Delete Deck</string>
+    <string name="deck_name">Edit Deck Name</string>
+    <string name="add_image_menu_item">Add Image</string>
+    <string name="add_from_gallery_btn">Add from Gallery</string>
+
+</resources>

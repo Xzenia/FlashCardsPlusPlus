@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.treskie.conrad.flashcardsplus.Add.AddImage;
 import com.treskie.conrad.flashcardsplus.Browser.CardBrowser;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
 import com.treskie.conrad.flashcardsplus.R;
@@ -77,12 +78,20 @@ public class EditCard extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
+            case R.id.action_add_image:
+                addImage();
+                return true;
             case R.id.action_delete_card:
                 deleteCard();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void addImage(){
+        Intent goToAddImage = new Intent(this, AddImage.class);
+        startActivity(goToAddImage);
     }
 
     private void deleteCard(){
@@ -98,7 +107,7 @@ public class EditCard extends AppCompatActivity {
     private void goBackToCardBrowser(){
         Intent cardBrowserIntent = new Intent (this, CardBrowser.class);
         cardBrowserIntent.putExtra("deckId", deckId);
-        startActivity(cardBrowserIntent);
+        startActivityForResult(cardBrowserIntent,0);
         finish();
     }
 

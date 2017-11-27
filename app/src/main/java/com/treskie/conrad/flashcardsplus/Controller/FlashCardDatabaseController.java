@@ -66,11 +66,12 @@ public class FlashCardDatabaseController extends SQLiteOpenHelper{
         return result != -1;
     }
 
-    public boolean deleteAllCardsInDeck(int deckId){
+    public boolean deleteCardsByDeck(int deckId){
         SQLiteDatabase db = this.getWritableDatabase();
         long result = db.delete(TABLENAME,COLIDENTIFIER+" = ?",new String[]{String.valueOf(deckId)});
         return result != -1;
     }
+
     //TODO: Refactor this into something more appropriate like getDeckData
     public Cursor getData(int deckId){
         SQLiteDatabase db = this.getWritableDatabase();

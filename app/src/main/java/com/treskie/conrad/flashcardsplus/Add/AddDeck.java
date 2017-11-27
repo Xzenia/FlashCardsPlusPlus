@@ -31,18 +31,24 @@ public class AddDeck extends AppCompatActivity {
         Intent goToMainActivity = new Intent(this, MainActivity.class);
         String sProductName = mDeckName.getText().toString();
         int id = 111111 + (int) (Math.random() * 999999);
-        boolean addData = db.addData(id,sProductName);
 
-        if (addData == true){
-            toastMessage("Deck Successfully Added!");
-            Log.i(TAG, "Deck successfully added!");
-            startActivity(goToMainActivity);
-            finish();
+        if (db.checkIfDeckNameExists(sProductName)){
+            boolean addData = db.addData(id,sProductName);
 
+            if (addData == true){
+                toastMessage("Deck Successfully Added!");
+                Log.i(TAG, "Deck successfully added!");
+                startActivity(goToMainActivity);
+                finish();
+
+            } else {
+                toastMessage("Oops! Something went wrong!");
+                Log.e(TAG, "Deck was not successfully added!");
+            }
         } else {
-            toastMessage("Oops! Something went wrong!");
-            Log.e(TAG, "Deck was not successfully added!");
+            toastMessage("Deck name already exists!");
         }
+
     }
 
     private void toastMessage(String message){

@@ -36,9 +36,7 @@ public class CardViewer extends AppCompatActivity {
     private GestureDetectorCompat gestureObject;
     private int indexNumber = 0;
     private int idNumber = 0;
-
-    private String sSecondPart;
-
+    private String sSecondPart = "";
     private static final String TAG = "CardViewer";
 
     @Override
@@ -52,10 +50,9 @@ public class CardViewer extends AppCompatActivity {
         wbSecondPart = (WebView) findViewById(R.id.secondPart);
         idNumber = getIdFromMainActivity();
         gestureObject = new GestureDetectorCompat(this, new detectGestureMethod());
-
+        getCards(idNumber);
         if (idNumber > 0){
-            Log.i(TAG,"Deck ID is received by CardViewer.");
-            toastMessage(""+idNumber);
+            Log.i(TAG,"Deck ID is received by CardViewer. "+idNumber);
             /*
                 getCards(idNumber) - gets all cards on deck and puts them in the ArrayList
 
@@ -65,7 +62,6 @@ public class CardViewer extends AppCompatActivity {
                 showCard - obviously shows the current card to the user.
 
              */
-            getCards(idNumber);
             indexNumber = getIndexFromPreviousActivity();
             showCard(indexNumber);
             wbSecondPart.setVisibility(View.INVISIBLE);
@@ -129,7 +125,10 @@ public class CardViewer extends AppCompatActivity {
     public void goToPreviousCard(){
         Intent previousCard = new Intent(this, CardViewer.class);
         if (indexNumber == 0){
-            toastMessage("You are in the first card!");
+            previousCard.putExtra("index", firstPartArray.size() - 1);
+            previousCard.putExtra("deckId",idNumber);
+            startActivity(previousCard);
+            finish();
         } else {
             previousCard.putExtra("index", indexNumber - 1);
             previousCard.putExtra("deckId",idNumber);
@@ -188,7 +187,7 @@ public class CardViewer extends AppCompatActivity {
     private void goToCardList(){
         Intent goToCardList = new Intent(this, CardBrowser.class);
         goToCardList.putExtra("deckId", idNumber);
-        startActivity(goToCardList);
+        startActivityForResult(goToCardList, 0);
         finish();
     }
 

@@ -1,6 +1,5 @@
 package com.treskie.conrad.flashcardsplus;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +20,7 @@ import com.treskie.conrad.flashcardsplus.Add.AddCard;
 import com.treskie.conrad.flashcardsplus.Add.AddDeck;
 import com.treskie.conrad.flashcardsplus.Controller.DeckDatabaseController;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
+import com.treskie.conrad.flashcardsplus.Edit.RenameDeck;
 import com.treskie.conrad.flashcardsplus.Viewer.CardViewer;
 
 import java.util.ArrayList;
@@ -98,6 +98,25 @@ public class MainActivity extends AppCompatActivity {
         goToEditActivity.putExtra("deckId",id);
         startActivity(goToEditActivity);
     }
+
+    private void goToMainActivity(){
+        Intent goToMain = new Intent (this, MainActivity.class);
+        startActivity(goToMain);
+        finish();
+    }
+
+    private void goToRenameDeckActivity(){
+        Intent goToRenameDeck = new Intent(this, RenameDeck.class);
+        goToRenameDeck.putExtra("deckName", deckName);
+        goToRenameDeck.putExtra("deckId", deckId);
+        startActivity(goToRenameDeck);
+    }
+
+    private void deleteDeck() {
+        deckController.deleteDeck(deckId);
+        flashCardController.deleteCardsByDeck(deckId);
+        goToMainActivity();
+    }
     //Top bar menu
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
@@ -138,8 +157,10 @@ public class MainActivity extends AppCompatActivity {
                 goToAddCardActivity();
                 return true;
             case R.id.renameDeck:
+                goToRenameDeckActivity();
                 return true;
             case R.id.deleteDeck:
+                deleteDeck();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -170,21 +191,15 @@ public class MainActivity extends AppCompatActivity {
             toastMessage("Deck and Card DB import successful!!!");
             goToMainActivity();
         } else if (!confirmDeckImport && confirmCardImport) {
-            toastMessage("Deck DB import failed!!!");
+            toastMessage("Deck DB import failed but Card import was successful!!!");
             Log.e(TAG, "Deck DB failed to import!!!");
         } else if (!confirmCardImport && confirmDeckImport) {
-            toastMessage("Card DB import failed!!!");
+            toastMessage("Card DB import failed! but Deck import was successful!!");
             Log.e(TAG, "Card DB import to export!!!");
         } else {
             toastMessage("Unknown error occurred!!!");
             Log.e(TAG, "All else-if cases have failed in backupData()!");
         }
-    }
-
-    private void goToMainActivity(){
-        Intent goToMain = new Intent (this, MainActivity.class);
-        startActivity(goToMain);
-        finish();
     }
 
     //Makes popup messages. Good for debugging mostly.

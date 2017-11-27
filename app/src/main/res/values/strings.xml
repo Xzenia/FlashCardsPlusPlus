@@ -12,7 +12,7 @@
     <string name="answer_template"> Answer </string>
 
     <!-- Menu -->
-    <string name= "backup_data_menu_item"> Backup Data </string>
+    <string name="backup_data_menu_item"> Backup Data </string>
     <string name="card_list_menu_item"> Card List </string>
     <string name="help_button"> Help </string>
     <string name="about_button">About </string>
@@ -24,5 +24,9 @@
     <string name="context_menu_addCard">Add a card</string>
     <string name="context_menu_rename_deck">Rename Deck</string>
     <string name="context_menu_deleteDeck">Delete Deck</string>
+    <string name="deck_name">Edit Deck Name</string>
+    <string name="add_image_menu_item">Add Image</string>
+    <string name="add_from_gallery_btn">Add from Gallery</string>
+    <string name="add_from_gallery">Add Image</string>
 
 </resources>
