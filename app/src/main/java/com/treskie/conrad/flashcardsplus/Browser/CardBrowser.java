@@ -17,6 +17,7 @@ import com.treskie.conrad.flashcardsplus.Add.AddCard;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
 import com.treskie.conrad.flashcardsplus.Edit.EditCard;
 import com.treskie.conrad.flashcardsplus.R;
+import com.treskie.conrad.flashcardsplus.Viewer.CardViewer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ public class CardBrowser extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_browser);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         dc = new FlashCardDatabaseController(this);
         ListView listView = (ListView) findViewById(R.id.cardBrowserListView);
         cardList = new ArrayList<>();
@@ -69,6 +71,11 @@ public class CardBrowser extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    public boolean onSupportNavigateUp(){
+        goBackToCardViewer();
+        return true;
+    }
+
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.action_add_card:
@@ -83,6 +90,7 @@ public class CardBrowser extends AppCompatActivity {
         Intent addCard = new Intent(this, AddCard.class);
         addCard.putExtra("deckId",deckId);
         startActivity(addCard);
+        finish();
     }
 
     public void goToEditActivity(int card, int deck){
@@ -90,16 +98,19 @@ public class CardBrowser extends AppCompatActivity {
         editCard.putExtra("cardId", card);
         editCard.putExtra("deckId", deck);
         startActivity(editCard);
+        finish();
+    }
 
+    private void goBackToCardViewer(){
+        Intent goToCardViewer = new Intent (this, CardViewer.class);
+        goToCardViewer.putExtra("deckId", deckId);
+        startActivity(goToCardViewer);
     }
 
     public int getIdData() {
         Bundle getDeckId = getIntent().getExtras();
         int value = getDeckId.getInt("deckId");
         return value;
-    }
-    private void toastMessage(String message){
-        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
 
 }

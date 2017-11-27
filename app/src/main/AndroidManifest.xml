@@ -15,14 +15,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Add.AddCard" />
-        <activity android:name=".Add.AddDeck" />
+        <activity android:name=".Add.AddCard"  android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".Add.AddDeck"  android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Viewer.CardViewer" />
-        <activity android:name=".Edit.EditCard" />
+        <activity android:name=".Edit.EditCard" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".Browser.CardBrowser"/>
-        <activty android:name=".Add.AddImage" />
-        <activity android:name=".Edit.RenameDeck"/>
-        <activity android:name=".Add.AddImage" />
+        <activity android:name=".Edit.RenameDeck"  android:windowSoftInputMode="adjustResize"/>
 
     </application>
 

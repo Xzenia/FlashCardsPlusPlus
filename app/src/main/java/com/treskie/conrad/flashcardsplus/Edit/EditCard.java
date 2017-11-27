@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.treskie.conrad.flashcardsplus.Add.AddImage;
 import com.treskie.conrad.flashcardsplus.Browser.CardBrowser;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
 import com.treskie.conrad.flashcardsplus.R;
@@ -30,6 +29,7 @@ public class EditCard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_card);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         etFirstPart = (EditText) findViewById(R.id.firstPart);
         etSecondPart = (EditText) findViewById(R.id.secondPart);
         dc = new FlashCardDatabaseController(this);
@@ -47,6 +47,11 @@ public class EditCard extends AppCompatActivity {
         }
         etFirstPart.setText(oldFirstPart);
         etSecondPart.setText(oldSecondPart);
+    }
+
+    public boolean onSupportNavigateUp(){
+        goBackToCardBrowser();
+        return true;
     }
 
     public void saveToDatabase(View v) {
@@ -78,20 +83,12 @@ public class EditCard extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
-            case R.id.action_add_image:
-                addImage();
-                return true;
             case R.id.action_delete_card:
                 deleteCard();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void addImage(){
-        Intent goToAddImage = new Intent(this, AddImage.class);
-        startActivity(goToAddImage);
     }
 
     private void deleteCard(){
@@ -107,8 +104,7 @@ public class EditCard extends AppCompatActivity {
     private void goBackToCardBrowser(){
         Intent cardBrowserIntent = new Intent (this, CardBrowser.class);
         cardBrowserIntent.putExtra("deckId", deckId);
-        startActivityForResult(cardBrowserIntent,0);
-        finish();
+        startActivity(cardBrowserIntent);
     }
 
     private void toastMessage(String message){

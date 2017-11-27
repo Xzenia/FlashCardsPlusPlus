@@ -1,5 +1,6 @@
 package com.treskie.conrad.flashcardsplus.Viewer;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -131,7 +132,14 @@ public class CardViewer extends AppCompatActivity {
             startActivity(previousCard);
             finish();
         }
+    }
 
+    public void goToSpecificCard(int index){
+        Intent startCard = new Intent(this, CardViewer.class);
+        startCard.putExtra("index", index);
+        startCard.putExtra("deckId",idNumber);
+        startActivity(startCard);
+        finish();
     }
     //NOTE: This is temporary.
     public boolean onTouchEvent (MotionEvent event){
@@ -184,7 +192,12 @@ public class CardViewer extends AppCompatActivity {
         Intent goToCardList = new Intent(this, CardBrowser.class);
         goToCardList.putExtra("deckId", idNumber);
         startActivityForResult(goToCardList, 0);
-        finish();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK || resultCode == Activity.RESULT_CANCELED){
+            goToSpecificCard(0);
+        }
     }
 
     private void toastMessage(String message){

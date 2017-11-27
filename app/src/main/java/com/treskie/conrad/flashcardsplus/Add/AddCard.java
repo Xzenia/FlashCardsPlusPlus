@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.treskie.conrad.flashcardsplus.Browser.CardBrowser;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
-import com.treskie.conrad.flashcardsplus.MainActivity;
 import com.treskie.conrad.flashcardsplus.R;
 
 public class AddCard extends AppCompatActivity {
@@ -23,12 +22,12 @@ public class AddCard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_card);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mFirstPart = (EditText) findViewById(R.id.firstPart);
         mSecondPart = (EditText) findViewById(R.id.secondPart);
         dc = new FlashCardDatabaseController(this);
         Bundle getInfo = getIntent().getExtras();
         getDeckId = getInfo.getInt("deckId");
-        toastMessage("Deck ID: "+getDeckId);
     }
 
     public void saveToDatabase(View v){

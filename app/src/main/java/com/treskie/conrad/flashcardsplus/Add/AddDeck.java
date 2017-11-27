@@ -15,12 +15,14 @@ import com.treskie.conrad.flashcardsplus.R;
 public class AddDeck extends AppCompatActivity {
     EditText mDeckName;
     DeckDatabaseController db;
+    MainActivity mc = new MainActivity();
     private static final String TAG = "AddDeck";
-    //TODO: Add a method that checks if the name of the new deck is the same as an existing one.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_deck);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mDeckName = (EditText) findViewById(R.id.deckNameField);
         db = new DeckDatabaseController(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -48,7 +50,11 @@ public class AddDeck extends AppCompatActivity {
         } else {
             toastMessage("Deck name already exists!");
         }
+    }
 
+    public boolean onSupportNavigateUp(){
+        mc.goToMainActivity();
+        return true;
     }
 
     private void toastMessage(String message){

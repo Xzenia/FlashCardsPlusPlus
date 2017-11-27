@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(goToEditActivity);
     }
 
-    private void goToMainActivity(){
+    public void goToMainActivity(){
         Intent goToMain = new Intent (this, MainActivity.class);
         startActivity(goToMain);
         finish();

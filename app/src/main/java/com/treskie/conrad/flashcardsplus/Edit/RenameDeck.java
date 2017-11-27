@@ -14,14 +14,15 @@ import com.treskie.conrad.flashcardsplus.R;
 
 public class RenameDeck extends AppCompatActivity {
 
-    DeckDatabaseController dc;
-    TextView tvDeckName;
+    private DeckDatabaseController dc;
+    private TextView tvDeckName;
     private int deckId;
     private String deckName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_deck);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         dc = new DeckDatabaseController(this);
         tvDeckName = (TextView) findViewById(R.id.deckNameField);
         Bundle getDeckName = getIntent().getExtras();
@@ -46,6 +47,18 @@ public class RenameDeck extends AppCompatActivity {
             toastMessage("Deck name already exists!");
         }
     }
+
+    public boolean onSupportNavigateUp(){
+        goToMainActivity();
+        return true;
+    }
+
+    private void goToMainActivity(){
+        Intent goToMain = new Intent (this, MainActivity.class);
+        startActivity(goToMain);
+        finish();
+    }
+
 
     //Makes popup messages. Good for debugging mostly.
     private void toastMessage(String message){
