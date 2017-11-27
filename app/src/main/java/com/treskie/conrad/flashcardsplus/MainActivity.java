@@ -2,6 +2,7 @@ package com.treskie.conrad.flashcardsplus;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         flashCardController = new FlashCardDatabaseController(this);
         populateListView();
         registerForContextMenu(lvListView);
+        toastMessage(""+ Build.VERSION.SDK_INT);
 
     }
 

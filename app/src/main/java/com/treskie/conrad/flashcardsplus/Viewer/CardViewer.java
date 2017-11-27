@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +27,7 @@ public class CardViewer extends AppCompatActivity {
     private FlashCardDatabaseController dc;
 
     private TextView tvFirstPart;
-    private WebView wbSecondPart;
+    private TextView tvSecondPart;
 
     private ArrayList<String> firstPartArray;
     private ArrayList<String> secondPartArray;
@@ -36,7 +35,6 @@ public class CardViewer extends AppCompatActivity {
     private GestureDetectorCompat gestureObject;
     private int indexNumber = 0;
     private int idNumber = 0;
-    private String sSecondPart = "";
     private static final String TAG = "CardViewer";
 
     @Override
@@ -47,7 +45,7 @@ public class CardViewer extends AppCompatActivity {
         dc = new FlashCardDatabaseController(this);
         Intent goBackToMainActivity = new Intent(this,MainActivity.class);
         tvFirstPart = (TextView) findViewById(R.id.firstPart);
-        wbSecondPart = (WebView) findViewById(R.id.secondPart);
+        tvSecondPart = (TextView) findViewById(R.id.secondPart);
         idNumber = getIdFromMainActivity();
         gestureObject = new GestureDetectorCompat(this, new detectGestureMethod());
         getCards(idNumber);
@@ -64,7 +62,7 @@ public class CardViewer extends AppCompatActivity {
              */
             indexNumber = getIndexFromPreviousActivity();
             showCard(indexNumber);
-            wbSecondPart.setVisibility(View.INVISIBLE);
+            tvSecondPart.setVisibility(View.INVISIBLE);
 
         } else {
             Log.d(TAG,"Deck ID was not successfully received by CardViewer!");
@@ -99,10 +97,8 @@ public class CardViewer extends AppCompatActivity {
         if (firstPartArray.isEmpty()){
             toastMessage("There are no cards in deck!");
         } else {
-            String webDataString = "<center> "+secondPartArray.get(indexNumber)+" </center>";
-            sSecondPart = secondPartArray.get(indexNumber);
             tvFirstPart.setText(firstPartArray.get(indexNumber));
-            wbSecondPart.loadData(webDataString, "text/html; charset=utf-8", "UTF-8");
+            tvSecondPart.setText(secondPartArray.get(indexNumber));
         }
     }
     //TODO: Turn goToNextCard and goToPreviousCard into fragments
@@ -163,7 +159,7 @@ public class CardViewer extends AppCompatActivity {
         }
 
         public boolean onDoubleTap(MotionEvent e) {
-            wbSecondPart.setVisibility(View.VISIBLE);
+            tvSecondPart.setVisibility(View.VISIBLE);
             return super.onDoubleTap(e);
         }
     }

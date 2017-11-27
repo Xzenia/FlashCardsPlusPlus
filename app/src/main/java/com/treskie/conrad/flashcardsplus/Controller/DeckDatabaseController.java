@@ -33,7 +33,6 @@ public class DeckDatabaseController extends SQLiteOpenHelper {
         String createTable = "CREATE TABLE "+ TABLENAME + "(_ID INTEGER PRIMARY KEY, "+
                 COL1 +" TEXT);";
         db.execSQL(createTable);
-
     }
 
     public void onUpgrade(SQLiteDatabase db, int newVersion, int oldVersion) {
