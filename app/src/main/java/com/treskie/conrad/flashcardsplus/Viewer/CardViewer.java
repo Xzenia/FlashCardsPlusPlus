@@ -37,16 +37,17 @@ public class CardViewer extends AppCompatActivity {
     private int indexNumber = 0;
     private int idNumber = 0;
     private static final String TAG = "CardViewer";
-
+    private Intent goBackToMainActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_viewer);
 
         dc = new FlashCardDatabaseController(this);
-        Intent goBackToMainActivity = new Intent(this,MainActivity.class);
+        goBackToMainActivity = new Intent(this,MainActivity.class);
         tvFirstPart = (TextView) findViewById(R.id.firstPart);
         tvSecondPart = (TextView) findViewById(R.id.secondPart);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         idNumber = getIdFromMainActivity();
         gestureObject = new GestureDetectorCompat(this, new detectGestureMethod());
         getCards(idNumber);
@@ -70,6 +71,11 @@ public class CardViewer extends AppCompatActivity {
             startActivity(goBackToMainActivity);
             finish();
         }
+    }
+
+    public boolean onSupportNavigateUp(){
+        startActivity(goBackToMainActivity);
+        return true;
     }
 
     private int getIdFromMainActivity(){

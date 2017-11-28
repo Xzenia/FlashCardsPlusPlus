@@ -1,8 +1,8 @@
 package com.treskie.conrad.flashcardsplus;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,15 +13,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.treskie.conrad.flashcardsplus.Add.AddCard;
-import com.treskie.conrad.flashcardsplus.Add.AddDeck;
 import com.treskie.conrad.flashcardsplus.Controller.DeckDatabaseController;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
-import com.treskie.conrad.flashcardsplus.Edit.RenameDeck;
 import com.treskie.conrad.flashcardsplus.Viewer.CardViewer;
 
 import java.util.ArrayList;
@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private String deckName = "";
     private int deckId = 0;
 
+    //Popups
+    private EditText etDeckName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
         flashCardController = new FlashCardDatabaseController(this);
         populateListView();
         registerForContextMenu(lvListView);
-        toastMessage(""+ Build.VERSION.SDK_INT);
-
     }
 
     private void populateListView(){
@@ -81,12 +81,8 @@ public class MainActivity extends AppCompatActivity {
         }
         return id;
     }
+
     //Intents
-    public void goToAddDeckActivity(){
-        Intent addDeckActivity = new Intent(this, AddDeck.class);
-        startActivity(addDeckActivity);
-        finish();
-    }
 
     public void goToAddCardActivity(){
         Intent addCardActivity = new Intent(this, AddCard.class);
@@ -104,17 +100,10 @@ public class MainActivity extends AppCompatActivity {
     public void goToMainActivity(){
         Intent goToMain = new Intent (this, MainActivity.class);
         startActivity(goToMain);
-        finish();
-    }
-
-    private void goToRenameDeckActivity(){
-        Intent goToRenameDeck = new Intent(this, RenameDeck.class);
-        goToRenameDeck.putExtra("deckName", deckName);
-        goToRenameDeck.putExtra("deckId", deckId);
-        startActivity(goToRenameDeck);
     }
 
     private void deleteDeck() {
+        finish();
         deckController.deleteDeck(deckId);
         flashCardController.deleteCardsByDeck(deckId);
         goToMainActivity();
@@ -129,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.action_add_deck:
-                goToAddDeckActivity();
+                addDeckPopup();
                 return true;
             case R.id.action_backup_data:
                 backupData();
@@ -159,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 goToAddCardActivity();
                 return true;
             case R.id.renameDeck:
-                goToRenameDeckActivity();
+                renameDeckPopup(deckName);
                 return true;
             case R.id.deleteDeck:
                 deleteDeck();
@@ -175,13 +164,13 @@ public class MainActivity extends AppCompatActivity {
         if (confirmDeckExport && confirmCardExport) {
             toastMessage("Deck and Card DB export successful!!!");
         } else if (!confirmDeckExport) {
-            toastMessage("Deck DB export failed!!!");
+            toastMessage("Deck DB is missing! Please copy the backup into your sdcard and try again!");
             Log.e(TAG, "Deck DB failed to export!!!");
         } else if (!confirmCardExport) {
-            toastMessage("Card DB export failed!!!");
+            toastMessage("Card DB is missing! Please copy the backup into your sdcard and try again! ");
             Log.e(TAG, "Card DB failed to export!!!");
         } else {
-            toastMessage("Unknown error occurred!!!");
+            toastMessage("Both card and deck DB are missing. Please copy the backup into your sdcard and try again!");
             Log.e(TAG, "All else-if cases have failed in backupData()!");
         }
     }
@@ -203,6 +192,86 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "All else-if cases have failed in backupData()!");
         }
     }
+
+    //Popups
+    private void renameDeckPopup(String deckName){
+        final Dialog renameDialog = new Dialog (this);
+        renameDialog.setContentView(R.layout.activity_edit_deck);
+        renameDialog.setTitle("Rename Deck");
+        etDeckName = renameDialog.findViewById(R.id.deckNameField);
+        etDeckName.setText(deckName);
+        Button editButton = renameDialog.findViewById(R.id.confirmButton);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                renameDeckSaveToDatabase();
+            }
+        });
+        Button cancelButton = renameDialog.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                renameDialog.dismiss();
+            }
+        });
+        renameDialog.show();
+    }
+
+    private void addDeckPopup(){
+        final Dialog addDeckDialog = new Dialog(this);
+        addDeckDialog.setContentView(R.layout.activity_add_deck);
+        addDeckDialog.setTitle("Add a new deck");
+        etDeckName = addDeckDialog.findViewById(R.id.deckNameField);
+        Button confirmBtn = addDeckDialog.findViewById(R.id.addButton);
+        confirmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addDeckSaveToDatabase();
+            }
+        });
+        Button cancelButton = addDeckDialog.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addDeckDialog.dismiss();
+            }
+        });
+        addDeckDialog.show();
+    }
+
+    private void renameDeckSaveToDatabase(){
+        String newDeckName = etDeckName.getText().toString();
+        if (deckController.checkIfDeckNameExists(newDeckName)){
+            Boolean confirm = deckController.renameDeck(newDeckName, deckId);
+            if (confirm){
+                toastMessage("Deck was successfully renamed!");
+                goToMainActivity();
+            } else {
+                toastMessage("Deck was not successfully renamed!");
+            }
+        } else {
+            toastMessage("A deck with that name already exists!");
+        }
+    }
+
+    private void addDeckSaveToDatabase(){
+        String newDeck = etDeckName.getText().toString();
+        if (deckController.checkIfDeckNameExists(newDeck)){
+            int id = 111111 + (int) (Math.random() * 999999);
+            boolean addData = deckController.addData(id,newDeck);
+            if (addData){
+                toastMessage("Deck Successfully Added!");
+                Log.i(TAG, "Deck successfully added!");
+                viewItem(id);
+            } else {
+                toastMessage("Oops! Something went wrong! Deck was not saved!");
+                Log.e(TAG, "Deck was not successfully added!");
+            }
+        } else {
+            toastMessage("Deck name already exists!");
+        }
+    }
+
 
     //Makes popup messages. Good for debugging mostly.
     private void toastMessage(String message){

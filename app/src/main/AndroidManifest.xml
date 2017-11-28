@@ -30,18 +30,12 @@
         <activity
             android:name=".Add.AddCard"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".Add.AddDeck"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".Viewer.CardViewer" />
+        <activity android:name=".Viewer.CardViewer" android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Edit.EditCard"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".Browser.CardBrowser" />
-        <activity
-            android:name=".Edit.RenameDeck"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".Browser.CardBrowser" android:windowSoftInputMode="adjustResize"  />
+        <activity android:name=".MainActivity" android:windowSoftInputMode="adjustResize" ></activity>
     </application>
 
 </manifest>

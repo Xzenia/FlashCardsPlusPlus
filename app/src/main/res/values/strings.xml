@@ -28,5 +28,7 @@
     <string name="add_image_menu_item">Add Image</string>
     <string name="add_from_gallery_btn">Add from Gallery</string>
     <string name="add_from_gallery">Add Image</string>
+    <string name="cancel_btn">Cancel</string>
+    <string name="developer_name">Edge Development (C) 2017</string>
 
 </resources>
