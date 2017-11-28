@@ -105,6 +105,7 @@ public class CardBrowser extends AppCompatActivity {
         Intent goToCardViewer = new Intent (this, CardViewer.class);
         goToCardViewer.putExtra("deckId", deckId);
         startActivity(goToCardViewer);
+        finish();
     }
 
     public int getIdData() {

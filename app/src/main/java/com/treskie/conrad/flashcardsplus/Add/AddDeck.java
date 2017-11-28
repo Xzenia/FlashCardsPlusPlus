@@ -13,9 +13,8 @@ import com.treskie.conrad.flashcardsplus.MainActivity;
 import com.treskie.conrad.flashcardsplus.R;
 
 public class AddDeck extends AppCompatActivity {
-    EditText mDeckName;
-    DeckDatabaseController db;
-    MainActivity mc = new MainActivity();
+    private EditText mDeckName;
+    private DeckDatabaseController db;
     private static final String TAG = "AddDeck";
 
     @Override
@@ -53,6 +52,7 @@ public class AddDeck extends AppCompatActivity {
     }
 
     public boolean onSupportNavigateUp(){
+        MainActivity mc = new MainActivity();
         mc.goToMainActivity();
         return true;
     }

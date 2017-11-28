@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.treskie.conrad.flashcardsplus.Browser.CardBrowser;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
 import com.treskie.conrad.flashcardsplus.R;
+import com.treskie.conrad.flashcardsplus.Viewer.CardViewer;
 
 public class AddCard extends AppCompatActivity {
     EditText mFirstPart;
@@ -51,6 +52,13 @@ public class AddCard extends AppCompatActivity {
         }
         startActivity(goToDeckViewer);
     }
+
+    public boolean onSupportNavigateUp(){
+        CardViewer cv = new CardViewer();
+        cv.goToCardList();
+        return true;
+    }
+
 
     private void toastMessage(String message){
         Toast.makeText(this,message, Toast.LENGTH_SHORT).show();

@@ -105,6 +105,7 @@ public class EditCard extends AppCompatActivity {
         Intent cardBrowserIntent = new Intent (this, CardBrowser.class);
         cardBrowserIntent.putExtra("deckId", deckId);
         startActivity(cardBrowserIntent);
+        finish();
     }
 
     private void toastMessage(String message){

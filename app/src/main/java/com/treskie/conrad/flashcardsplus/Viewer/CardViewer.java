@@ -188,7 +188,7 @@ public class CardViewer extends AppCompatActivity {
         }
     }
 
-    private void goToCardList(){
+    public void goToCardList(){
         Intent goToCardList = new Intent(this, CardBrowser.class);
         goToCardList.putExtra("deckId", idNumber);
         startActivityForResult(goToCardList, 0);
