@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <!-- TODO: Replace colorPrimary with an image without having the app crash on startup. -->
+    <color name="colorPrimary">#ADCC4D</color>
     <color name="colorPrimaryDark">	#2ABE68</color>
     <color name="colorAccent">#FF4081</color>
 </resources>
