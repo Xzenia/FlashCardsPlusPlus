@@ -39,7 +39,7 @@ public class CardBrowser extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.cardBrowserListView);
         cardList = new ArrayList<>();
         deckId = getIdData();
-        Cursor data = dc.getData(deckId);
+        Cursor data = dc.getAllCardsByDeck(deckId);
 
         while (data.moveToNext()) {
             HashMap<String, String> temp = new HashMap<>();

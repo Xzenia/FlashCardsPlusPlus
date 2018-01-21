@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
 
+import com.treskie.conrad.flashcardsplus.ZipClass;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,10 +25,11 @@ public class DeckDatabaseController extends SQLiteOpenHelper {
     private static final String COL1 = "name";
 
     private static final int DATABASEVERSION = 1;
-    private Context mContext;
+    public String currentDBPath;
+
     public DeckDatabaseController(Context context){
         super(context,TABLENAME,null,DATABASEVERSION);
-        mContext = context;
+        Context mContext = context;
     }
 
     public void onCreate(SQLiteDatabase db){
@@ -85,31 +88,25 @@ public class DeckDatabaseController extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public boolean exportDeckData(Context mContext) {
-        File sdCard = Environment.getExternalStorageDirectory();
-        String backupDBPath= getDatabaseName();
-        String currentDBPath = mContext.getDatabasePath(backupDBPath).toString();
-        File currentDB = new File(currentDBPath);
-        File backupDB = new File(sdCard, backupDBPath);
+    public String getDbPath (Context mContext) {
+        String tableName = getDatabaseName();
+        String dbPath = "";
         try {
-            FileChannel source = new FileInputStream(currentDB).getChannel();
-            FileChannel destination = new FileOutputStream(backupDB).getChannel();
-            destination.transferFrom(source, 0, source.size());
-            source.close();
-            destination.close();
-            return true;
-        } catch (IOException e) {
+            dbPath = mContext.getDatabasePath(tableName).toString();
+            return dbPath;
+        } catch (Exception e){
             e.printStackTrace();
-            return false;
+            return dbPath;
         }
     }
 
     public boolean importDeckData(Context mContext) {
-        File sdCard = Environment.getExternalStorageDirectory();
-        String backupDBPath = getDatabaseName();
-        String targetDBPath = mContext.getDatabasePath(backupDBPath).toString();
+        ZipClass zc = new ZipClass();
+        File sdCard = new File(zc.outputLocation);
+        String tableName = getDatabaseName();
+        String targetDBPath = mContext.getDatabasePath(tableName).toString();
         File targetDB = new File(targetDBPath);
-        File backupDB = new File(sdCard, backupDBPath);
+        File backupDB = new File(sdCard, tableName);
         try {
             FileChannel source = new FileInputStream(backupDB).getChannel();
             FileChannel destination = new FileOutputStream(targetDB).getChannel();

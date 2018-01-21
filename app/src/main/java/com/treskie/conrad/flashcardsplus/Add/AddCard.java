@@ -33,14 +33,18 @@ public class AddCard extends AppCompatActivity {
 
     public void saveToDatabase(View v){
         Intent goToDeckViewer = new Intent(this, CardBrowser.class);
-        int id = 111111 + (int) (Math.random() * 999999);
+        int cardId = 111111 + (int) (Math.random() * 999999);
         /*
             Grabs data from the two text fields
             Look into /res/layout/activity_add_card.xml for said text fields
         */
         String firstPart = mFirstPart.getText().toString();
         String secondPart = mSecondPart.getText().toString();
-        boolean confirm = dc.addData(id,getDeckId,firstPart,secondPart);
+        dc.setCardId(cardId);
+        dc.setDeckIdentifier(getDeckId);
+        dc.setFirstPart(firstPart);
+        dc.setSecondPart(secondPart);
+        boolean confirm = dc.addData();
         if (confirm){
             toastMessage("Card Successfully Added!");
             goToDeckViewer.putExtra("deckId",getDeckId);

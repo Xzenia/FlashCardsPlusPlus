@@ -1,8 +1,11 @@
 package com.treskie.conrad.flashcardsplus;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,31 +27,34 @@ import com.treskie.conrad.flashcardsplus.Controller.DeckDatabaseController;
 import com.treskie.conrad.flashcardsplus.Controller.FlashCardDatabaseController;
 import com.treskie.conrad.flashcardsplus.Viewer.CardViewer;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private DeckDatabaseController deckController;
-    private FlashCardDatabaseController flashCardController;
+    private DeckDatabaseController dc;
+    private FlashCardDatabaseController fc;
+    private ZipClass zc;
     private ListView lvListView;
+    private ListView lvRestoreBackupListView;
     private String deckName = "";
     private int deckId = 0;
-
-    //Popups
+    private Dialog nameBackupDialog;
     private EditText etDeckName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lvListView = (ListView) findViewById(R.id.listView);
-        deckController = new DeckDatabaseController(this);
-        flashCardController = new FlashCardDatabaseController(this);
+        dc = new DeckDatabaseController(this);
+        fc = new FlashCardDatabaseController(this);
+        zc = new ZipClass();
         populateListView();
         registerForContextMenu(lvListView);
     }
 
     private void populateListView(){
-        Cursor data = deckController.getData();
+        Cursor data = dc.getData();
         //goes through all the entries in the deck database and adds them to the ArrayList
         ArrayList<String> listData = new ArrayList<>();
         while(data.moveToNext()){
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
     public int getDeckId(String deckName){
         int id = 0;
-        Cursor data = deckController.getIdData(deckName);
+        Cursor data = dc.getIdData(deckName);
         while (data.moveToNext()) {
             id = data.getInt(0);
         }
@@ -103,10 +109,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteDeck() {
-        finish();
-        deckController.deleteDeck(deckId);
-        flashCardController.deleteCardsByDeck(deckId);
+        dc.deleteDeck(deckId);
+        fc.deleteCardsByDeck(deckId);
         goToMainActivity();
+        finish();
+
     }
     //Top bar menu
     public boolean onCreateOptionsMenu(Menu menu){
@@ -121,10 +128,10 @@ public class MainActivity extends AppCompatActivity {
                 addDeckPopup();
                 return true;
             case R.id.action_backup_data:
-                backupData();
+                backupNamePopup();
                 return true;
             case R.id.action_restore_data:
-                restoreData();
+                restoreDataPopup();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -157,40 +164,45 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-    //TODO: Backups should be zipped up.
-    private void backupData() {
-        boolean confirmDeckExport = deckController.exportDeckData(this);
-        boolean confirmCardExport = flashCardController.exportCardData(this);
-        if (confirmDeckExport && confirmCardExport) {
-            toastMessage("Deck and Card DB export successful!!!");
-        } else if (!confirmDeckExport) {
-            toastMessage("Deck DB is missing! Please copy the backup into your sdcard and try again!");
-            Log.e(TAG, "Deck DB failed to export!!!");
-        } else if (!confirmCardExport) {
-            toastMessage("Card DB is missing! Please copy the backup into your sdcard and try again! ");
-            Log.e(TAG, "Card DB failed to export!!!");
-        } else {
-            toastMessage("Both card and deck DB are missing. Please copy the backup into your sdcard and try again!");
-            Log.e(TAG, "All else-if cases have failed in backupData()!");
-        }
-    }
 
-    private void restoreData() {
-        boolean confirmDeckImport = deckController.importDeckData(this);
-        boolean confirmCardImport = flashCardController.importCardData(this);
+    private void restoreData(String fileName) {
+        zc.unzip(fileName);
+        boolean confirmDeckImport = dc.importDeckData(this);
+        boolean confirmCardImport = fc.importCardData(this);
         if (confirmDeckImport && confirmCardImport) {
             toastMessage("Deck and Card DB import successful!!!");
             goToMainActivity();
-        } else if (!confirmDeckImport && confirmCardImport) {
-            toastMessage("Deck DB import failed but Card import was successful!!!");
-            Log.e(TAG, "Deck DB failed to import!!!");
-        } else if (!confirmCardImport && confirmDeckImport) {
-            toastMessage("Card DB import failed! but Deck import was successful!!");
-            Log.e(TAG, "Card DB import to export!!!");
         } else {
-            toastMessage("Unknown error occurred!!!");
-            Log.e(TAG, "All else-if cases have failed in backupData()!");
+            toastMessage("Deck and Card DB import failed!");
         }
+        zc.deleteFiles();
+    }
+
+    private void restoreDataPopup(){
+        final Dialog restoreBackupDialog = new Dialog (this);
+        restoreBackupDialog.setContentView(R.layout.activity_restore_backup);
+        restoreBackupDialog.setTitle("Restore Backup");
+        lvRestoreBackupListView = restoreBackupDialog.findViewById(R.id.backupListView);
+        populateRestoreBackupListView();
+        lvRestoreBackupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String fileName = adapterView.getItemAtPosition(i).toString();
+                restoreData(fileName);
+            }
+        });
+        restoreBackupDialog.show();
+    }
+
+    private void populateRestoreBackupListView(){
+        String path = Environment.getExternalStorageDirectory()+"/flashcardsplusplus/backup/";
+        File backupDirectory = new File(path);
+        File[] backupFiles = backupDirectory.listFiles();
+        String[] fileNames = new String[backupFiles.length];
+        for (int counter = 0; counter < backupFiles.length; counter++){
+            fileNames[counter] = backupFiles[counter].getName();
+        }
+        final ListAdapter adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,fileNames);
+        lvRestoreBackupListView.setAdapter(adapter);
     }
 
     //Popups
@@ -238,11 +250,55 @@ public class MainActivity extends AppCompatActivity {
         });
         addDeckDialog.show();
     }
+    //Recycles the Edit deck layout. Will probably make a new layout for it in the future.
+    private void backupNamePopup(){
+        nameBackupDialog = new Dialog (this);
+        nameBackupDialog.setContentView(R.layout.activity_edit_deck);
+        nameBackupDialog.setTitle("Backup Name");
+        final EditText etBackupNameField  = nameBackupDialog.findViewById(R.id.deckNameField);
+        Button editButton = nameBackupDialog.findViewById(R.id.confirmButton);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setBackupName(etBackupNameField);
+            }
+        });
+
+        Button cancelButton = nameBackupDialog.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nameBackupDialog.dismiss();
+            }
+        });
+        nameBackupDialog.show();
+    }
+
+    private void setBackupName(EditText name) {
+        String backupName = name.getText().toString();
+        if (backupName.isEmpty()){
+            toastMessage("Backup Name is invalid!");
+        } else {
+            backupData(backupName);
+        }
+    }
+
+    private void backupData(String fileName){
+        String[] files = new String[2];
+        zc.outputFolder();
+        files[0] = fc.getDbPath(this);
+        files[1] = dc.getDbPath(this);
+        zc.zip(files,fileName);
+        toastMessage("Data backup successful. Backup file is located in "+zc.outputLocation);
+        nameBackupDialog.dismiss();
+
+    }
+
 
     private void renameDeckSaveToDatabase(){
         String newDeckName = etDeckName.getText().toString();
-        if (deckController.checkIfDeckNameExists(newDeckName)){
-            Boolean confirm = deckController.renameDeck(newDeckName, deckId);
+        if (dc.checkIfDeckNameExists(newDeckName)){
+            Boolean confirm = dc.renameDeck(newDeckName, deckId);
             if (confirm){
                 toastMessage("Deck was successfully renamed!");
                 goToMainActivity();
@@ -256,9 +312,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void addDeckSaveToDatabase(){
         String newDeck = etDeckName.getText().toString();
-        if (deckController.checkIfDeckNameExists(newDeck)){
+        if (dc.checkIfDeckNameExists(newDeck)){
             int id = 111111 + (int) (Math.random() * 999999);
-            boolean addData = deckController.addData(id,newDeck);
+            boolean addData = dc.addData(id,newDeck);
             if (addData){
                 toastMessage("Deck Successfully Added!");
                 Log.i(TAG, "Deck successfully added!");
@@ -271,7 +327,6 @@ public class MainActivity extends AppCompatActivity {
             toastMessage("Deck name already exists!");
         }
     }
-
 
     //Makes popup messages. Good for debugging mostly.
     private void toastMessage(String message){

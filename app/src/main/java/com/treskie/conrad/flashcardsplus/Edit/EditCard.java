@@ -61,7 +61,11 @@ public class EditCard extends AppCompatActivity {
         if (oldFirstPart.equals(newFirstPart) && oldSecondPart.equals(newSecondPart)) {
             toastMessage("One or both fields are unchanged!");
         } else {
-            boolean editData = dc.updateCard(newFirstPart, newSecondPart, cardId);
+            dc.setCardId(cardId);
+            dc.setDeckIdentifier(deckId);
+            dc.setFirstPart(newFirstPart);
+            dc.setSecondPart(newSecondPart);
+            boolean editData = dc.updateCard();
             if (editData == true) {
                 toastMessage("Card successfully edited!");
                 goToCardViewer.putExtra("deckId", deckId);

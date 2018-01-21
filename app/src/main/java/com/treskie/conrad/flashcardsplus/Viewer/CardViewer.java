@@ -30,26 +30,20 @@ public class CardViewer extends AppCompatActivity {
     private TextView tvFirstPart;
     private TextView tvSecondPart;
 
-    private ArrayList<String> firstPartArray;
-    private ArrayList<String> secondPartArray;
-
     private GestureDetectorCompat gestureObject;
     private int indexNumber = 0;
     private int idNumber = 0;
     private static final String TAG = "CardViewer";
     private Intent goBackToMainActivity;
     private int tapSwitch = 0;
+    public ArrayList<String> cardIdList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_viewer);
-
-        dc = new FlashCardDatabaseController(this);
-        goBackToMainActivity = new Intent(this,MainActivity.class);
-        tvFirstPart = (TextView) findViewById(R.id.firstPart);
-        tvSecondPart = (TextView) findViewById(R.id.secondPart);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initializeVariables();
         idNumber = getIdFromMainActivity();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         gestureObject = new GestureDetectorCompat(this, new detectGestureMethod());
         getCards(idNumber);
         if (idNumber > 0){
@@ -64,13 +58,18 @@ public class CardViewer extends AppCompatActivity {
 
              */
             indexNumber = getIndexFromPreviousActivity();
-            showCard(indexNumber);
+            Log.d(TAG,"Index Number: "+indexNumber);
+            if (cardIdList.isEmpty()){
+                toastMessage("Deck is empty!");
+            } else {
+                showCard(indexNumber);
+            }
             tvSecondPart.setVisibility(View.INVISIBLE);
 
         } else {
-            Log.d(TAG,"Deck ID was not successfully received by CardViewer!");
             startActivity(goBackToMainActivity);
             finish();
+            Log.e(TAG,"Deck ID was not successfully received by CardViewer!");
         }
     }
 
@@ -78,6 +77,13 @@ public class CardViewer extends AppCompatActivity {
         Intent goToMain = new Intent (this, MainActivity.class);
         startActivity(goToMain);
         return true;
+    }
+
+    private void initializeVariables(){
+        dc = new FlashCardDatabaseController(this);
+        tvFirstPart = (TextView) findViewById(R.id.firstPart);
+        tvSecondPart = (TextView) findViewById(R.id.secondPart);
+        goBackToMainActivity = new Intent(this,MainActivity.class);
     }
 
     private int getIdFromMainActivity(){
@@ -92,29 +98,30 @@ public class CardViewer extends AppCompatActivity {
         return index;
     }
 
-    private void getCards(int id){
-        Cursor data = dc.getData(id);
-        firstPartArray = new ArrayList<>();
-        secondPartArray = new ArrayList<>();
-        while (data.moveToNext()) {
-            firstPartArray.add(data.getString(2));
-            secondPartArray.add(data.getString(3));
+    private void getCards(int deckId){
+        Cursor cardIdCursor = dc.getCardId(deckId);
+        while (cardIdCursor.moveToNext()) {
+            cardIdList.add(cardIdCursor.getString(0));
         }
+        Log.d(TAG,"Card Id List Length: "+ cardIdList.size());
     }
 
     private void showCard(int indexNumber){
-        if (firstPartArray.isEmpty()){
+        Cursor cardCursor = dc.getSpecificCard(Integer.parseInt(cardIdList.get(indexNumber)));
+        if (cardIdList.isEmpty()){
             toastMessage("There are no cards in deck!");
         } else {
-            tvFirstPart.setText(firstPartArray.get(indexNumber));
-            tvSecondPart.setText(secondPartArray.get(indexNumber));
+            while(cardCursor.moveToNext()){
+                tvFirstPart.setText(cardCursor.getString(2));
+                tvSecondPart.setText(cardCursor.getString(3));
+            }
         }
     }
     //TODO: Turn goToNextCard and goToPreviousCard into fragments
     public void goToNextCard(){
         Intent nextCard = new Intent(this, CardViewer.class);
 
-        if (indexNumber >= firstPartArray.size() - 1){
+        if (indexNumber >= cardIdList.size() - 1){
             nextCard.putExtra("index", 0);
             nextCard.putExtra("deckId",idNumber);
             startActivity(nextCard);
@@ -130,7 +137,7 @@ public class CardViewer extends AppCompatActivity {
     public void goToPreviousCard(){
         Intent previousCard = new Intent(this, CardViewer.class);
         if (indexNumber == 0){
-            previousCard.putExtra("index", firstPartArray.size() - 1);
+            previousCard.putExtra("index", cardIdList.size() - 1);
             previousCard.putExtra("deckId",idNumber);
             startActivity(previousCard);
             finish();
@@ -149,7 +156,7 @@ public class CardViewer extends AppCompatActivity {
         startActivity(startCard);
         finish();
     }
-    //NOTE: This is temporary.
+
     public boolean onTouchEvent (MotionEvent event){
         this.gestureObject.onTouchEvent(event);
         return super.onTouchEvent(event);
